@@ -1,4 +1,4 @@
-utilitario,toyota,hilux,24000,750,mixto,700,TOY-HI_6
+utilitario,toyota,hilux,30000,750,mixto,777,TOY-HI_6
 utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_7
 utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_8
 deportivo,ford,mustang,40000,580,urbano,250,FOR-mu_9

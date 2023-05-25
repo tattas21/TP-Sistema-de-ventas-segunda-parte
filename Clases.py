@@ -31,6 +31,7 @@ class RegistroUsuarios:
         self.usuarios = []
         self.archivo = "usuarios.txt"
         self.cargar_usuarios()
+        self.usuario_actual = None
 
     def registrar_usuario(self, usuario):
         self.usuarios.append(usuario)
@@ -57,21 +58,14 @@ class RegistroUsuarios:
                 print(f"El usuario ya existe")
                 return False
         return None
-# Ver opcion sin clase
-class Login:
-    def __init__(self, registro_usuarios):
-        self.registro_usuarios = registro_usuarios
-        self.usuario_actual = None
-
     def iniciar_sesion(self, email, password):
-        for usuario in self.registro_usuarios.usuarios:
+        for usuario in self.usuarios:
             if usuario.email == email and usuario.password == password:
                 self.usuario_actual = usuario
                 return True
         return False
 
-    def cerrar_sesion(self):
-        self.usuario_actual = None
+# Ver opcion sin clase
 
 class Vehiculo:
     def __init__(self, modelo, marca, precio,  autonomia, uso, id):
@@ -183,4 +177,54 @@ class ListaEnlazada:
         while self.cabeza.siguiente is not None:
             self.cabeza = self.cabeza.siguiente
         return self.cabeza
-
+    def modificar(self, id, dato, nuevo_dato):
+        if self.cabeza is None:
+            return
+        else:
+            actual = self.cabeza
+            while actual is not None:
+                if actual.vehiculo.id == id:
+                    if dato == "marca":
+                        actual.vehiculo.marca = nuevo_dato
+                        return
+                    elif dato == "modelo":
+                        actual.vehiculo.modelo = nuevo_dato
+                        return
+                    elif dato == "precio":
+                        actual.vehiculo.precio = nuevo_dato
+                        return
+                    elif dato == "autonomia":
+                        actual.vehiculo.autonomia = nuevo_dato
+                        return
+                    elif dato == "uso":
+                        actual.vehiculo.uso = nuevo_dato
+                        return
+                    elif dato == "carga maxima":
+                        actual.vehiculo.carga_maxima = nuevo_dato
+                        return
+                    elif dato == "velocidad maxima":
+                        actual.vehiculo.velocidad_maxima = nuevo_dato
+                        return
+                    elif dato == "tiempo carga":
+                        actual.vehiculo.tiempo_carga = nuevo_dato
+                        return
+                    elif dato == "asientos":
+                        actual.vehiculo.asientos = nuevo_dato
+                        return
+                    elif dato == "tamaño baul":
+                        actual.vehiculo.tamaño_baul = nuevo_dato
+                        return
+                actual = actual.siguiente
+            return "No se encontró el vehículo"
+    def buscar(self, marca, modelo, precio, autonomia, uso):
+        listav = []
+        if self.cabeza is None:
+            return
+        else:
+            actual = self.cabeza
+            while actual is not None:
+                if actual.vehiculo.marca == marca or actual.vehiculo.modelo == modelo or actual.vehiculo.precio == precio or actual.vehiculo.autonomia == autonomia or actual.vehiculo.uso == uso:
+                    listav.append(actual.vehiculo)
+                actual = actual.siguiente
+            return listav
+    

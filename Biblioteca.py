@@ -57,7 +57,7 @@ def validar_nombre(nombre):
     return True
     
 
-def descargar_stock(nombre_archivo):
+def descargar_stock(nombre_archivo, variable):
     lista_entrelazada = ListaEnlazada()
     try:
         with open(nombre_archivo, "r") as archivo:
@@ -66,15 +66,31 @@ def descargar_stock(nombre_archivo):
             for linea in lineas:
                 campos = linea.strip().split(",")
                 if campos[0] == "utilitario":
-                    vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    if variable == True:
+                        vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    else:
+                        vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+
                 elif campos[0] == "deportivo":
-                    vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    if variable == True:
+                        vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    else:
+                        vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                 elif campos[0] == "electrico":
-                    vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    if variable == True:
+                        vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    else:
+                        vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                 elif campos[0] == "van":
-                    vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    if variable == True:
+                        vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    else:
+                        vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                 elif campos[0] == "compacto":
-                    vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    if variable == True:
+                        vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                    else:
+                        vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
 
                 lista_entrelazada.agregar(vehiculo)
         archivo.close()
@@ -190,105 +206,6 @@ def eliminar_vehiculo(lista_entrelazada):
             else:
                 print("Vehículo no encontrado")
                 n=True
-def modificar_dato_vehiculo(lista_entrelazada):
-    lista=lista_entrelazada.list()
-    print("Stock de vehículos:")
-    print(lista_entrelazada)
-    n=False
-    while n==False:
-        id = input("Ingrese el id del vehículo que desea modificar: ")
-        for i in lista:
-            if i.id == id:
-                print(f"Vehículo encontrado: {str(i)}")
-                n=True
-                m=False
-                while m==False:
-                    dato=input("Ingrese el dato que desea modificar: ")
-                    dato=dato.lower()
-                    match dato:
-                        case "marca":
-                            i.marca=input("Ingrese la nueva marca: ")
-                            m=True
-                        case "modelo":
-                            i.modelo=input("Ingrese el nuevo modelo: ")
-                            m=True
-                        case "precio":
-                            i.precio=int(input("Ingrese el nuevo precio: "))
-                            m=True
-                        case "autonomia":
-                            i.autonomia=int(input("Ingrese la nueva autonomía: "))
-                            m=True
-                        case "uso":
-                            i.uso=input("Ingrese el nuevo uso: ")
-                            m=True
-                        case "carga":
-                            i.carga=int(input("Ingrese la nueva carga: "))
-                            m=True
-                        case "velocidad":
-                            i.velocidad=int(input("Ingrese la nueva velocidad: "))
-                            m=True
-                        case "asientos":
-                            i.asientos=int(input("Ingrese la nueva cantidad de asientos: "))
-                            m=True
-                        case "tamaño":
-                            i.tamaño=int(input("Ingrese el nuevo tamaño: "))
-                            m=True
-                        case _:
-                            print("Dato no válido")
-                            m=True
-                    print(f"Se modificó el vehículo {str(i)}")
-            else:
-                n=True
-        return lista
-def buscar_vehiculo(lista_vehiculos, marca=None, modelo=None, precio=None, autonomia=None, uso=None):
-    lista_vehiculos = lista_vehiculos.list()
-    n = False
-    while n==False:
-        print("Filtros disponibles:\n marca\n modelo\n precio\n autonomia\n uso\n nota: si no desea utilizar un filtro, ingrese 'no'")
-        filtro=input("Ingrese el filtro que desea utilizar: ")
-        
-        filtro=filtro.lower()
-        match filtro:
-            case "marca":
-                marca=input("Ingrese la marca que desea buscar: ")
-                marca = marca.lower()
-            case "modelo":
-                modelo=input("Ingrese el modelo que desea buscar: ")
-                modelo = modelo.lower()
-            case "uso":
-                uso=input("Ingrese el uso que desea buscar: ")
-                uso = uso.lower()
-            case "precio":
-                precio=int(input("Ingrese el precio que desea buscar: "))
-            case "autonomia":
-                autonomia=int(input("Ingrese la autonomía que desea buscar: "))
-            case "no":
-                n=True
-            case _:
-                print("Filtro no válido")               
-        m=(input("Desea agregar otro filtro? (s/n): "))
-        m=m.lower()
-        if m=="s":
-            n=False
-        else: 
-            n=True
-    lista_v_filtrado = []
-    for vehiculo in lista_vehiculos:
-            if marca is not None and vehiculo.marca != marca:
-                continue   
-            if modelo is not None and vehiculo.modelo != modelo:
-                continue
-            if precio is not None and int(vehiculo.precio) > precio:
-                continue  
-            if autonomia is not None and int(vehiculo.autonomia) < autonomia:
-                continue
-            if uso is not None and vehiculo.uso != uso:
-                continue
-            lista_v_filtrado.append(vehiculo)
-    print("Vehículos encontrados:")
-    for vehiculo in lista_v_filtrado:
-        print(vehiculo)
-    return (lista_v_filtrado)
 
 def comprar_vehiculo(vehiculos_filtrados, lista, usuario):
     n=False
@@ -516,10 +433,10 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
             recaudacion = 0
             contador = 0
             contadormarca = 0
-            tupla_marca = ()
-            tupla_contador = ()
-            tupla_precio = ()
-            tupla_fecha = ()
+            lista_marca = []
+            lista_contador = []
+            lista_precio = []
+            lista_fecha = []
             
             for linea in lineas:
                 campos = linea.strip().split(",")
@@ -556,19 +473,18 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                             if marca2 == marca:
                                 contadormarca += 1
                             
-                        if marca not in tupla_marca: 
-                            tupla_marca += tuple(marca.split())
-                            tupla_contador += tuple(str(contadormarca).split())
-                        if marca in tupla_marca:
+                        if marca not in lista_marca: 
+                            lista_marca.append(marca)
+                            lista_contador.append(contadormarca)
+                        if marca in lista_marca:
                             pass
-                        
             
                     
-                    labels = tupla_marca
-                    sizes = convertir_tupla_en_lista(tupla_contador)
 
                     fig1, ax1 = plt.subplots()
-                    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                    labels = lista_marca
+                    size = lista_contador
+                    ax1.pie(size, labels=labels, autopct='%1.1f%%',
                     shadow=True, startangle=90)
                     ax1.axis('equal')
 
@@ -596,17 +512,17 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                                 precio = precio.split("Precio: ")[1]
                                 precio = precio.split("$")[1]
                                 contadorfac += int(precio)
-                        if fecha not in tupla_fecha: 
-                            tupla_fecha += tuple(fecha.split())
-                            tupla_precio += tuple(str(contadorfac).split())
-                        if fecha in tupla_fecha:
+                        if fecha not in lista_fecha: 
+                            lista_fecha.append(fecha)
+                            lista_precio.append(contadorfac)
+                        if fecha in lista_fecha:
                             pass
                     
                     fig, ax = plt.subplots()
-                    x = tupla_fecha
-                    counts = convertir_tupla_en_lista(tupla_precio)
-                    for i in range(len(counts)):
-                        counts[i] = int(counts[i])
+                    x = lista_fecha
+                    counts = lista_precio
+                    # for i in range(len(counts)):
+                    #     counts[i] = int(counts[i])
                     ax.bar(x, counts)
                     ax.set_ylabel('Recaudación')
                     ax.set_title('Recaudación Total por Día')          

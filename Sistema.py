@@ -3,8 +3,7 @@ from Clases import *
 from getpass import *
 
 registro = RegistroUsuarios()
-login = Login(registro)
-usuario_actual = None
+usuario_actual = None  
 while True:
     print("Bienvenido")
     print("1. Registro")
@@ -59,17 +58,17 @@ while True:
             es_admin=False
             n = True
             while n == True:
-                if login.iniciar_sesion(email, password):
+                if registro.iniciar_sesion(email, password):
                     if validar_email(email)=='sistema.com.ar':
                         while codigoadmin != '1234':
                             print("Codigo de administrador no válido.")
                             codigoadmin = input("Ingrese el codigo de administrador: ")
                         es_admin=True
-                        usuario_actual = login.usuario_actual
+                        usuario_actual = registro.usuario_actual
                         n = False
                         
                     else:
-                        usuario_actual = login.usuario_actual
+                        usuario_actual = registro.usuario_actual
                         n = False
                 else:
                     print("Email o contraseña incorrectos.")
@@ -104,7 +103,7 @@ while True:
                             # Funciona
                             case "1":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo)
+                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
                                 i = numero_id()
                                 n=True
                                 while n==True:
@@ -119,7 +118,7 @@ while True:
                             # funciona
                             case "2":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo)
+                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
                                 print(lista_entrelazada)
                                 id = input("Ingrese el id del vehiculo a eliminar: ")
                                 actual = lista_entrelazada.cabeza 
@@ -132,19 +131,33 @@ while True:
                                     actual = actual.siguiente
                             # Funciona
                             case "3":
-                                nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo)
-                                modificar_dato_vehiculo(lista_entrelazada)
-                                guardar_stock(nombre_archivo, lista_entrelazada)
+                                lista_entrelazada = descargar_stock("stock.txt", es_admin)
+                                print("Stock actual: ")
+                                print(lista_entrelazada)
+                                n = True
+                                while n == True:
+                                    id = input("Ingrese el id del vehiculo a modificar: ")
+                                    dato = input("Ingrese el dato a modificar: ")
+                                    nuevo_dato = input("Ingrese el nuevo dato: ")
+                                    lista_entrelazada.modificar(id, dato, nuevo_dato)
+                                    print("Desea modificar otro dato? (s/n)")
+                                    if input() == "s":
+                                        n = True
+                                    else:
+                                        n = False
+                                guardar_stock("stock.txt", lista_entrelazada)
+                                
+                                
+                                
                             # Funciona
                             case "4":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo)
+                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
                                 print(lista_entrelazada)
                             # Ver como implementar bien mathplotlib
                             case "5":
                                 nombre_archivo = "ventas.txt"
-                                descargar_lista_ventas_estadisticas(nombre_archivo)
+                                descargar_lista_ventas_estadisticas(nombre_archivo, es_admin)
 
                             # si esto no funciona estamo mal
                             case "6":
@@ -163,13 +176,47 @@ while True:
                             # Funciona
                             case "1":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock_cliente(nombre_archivo)
+                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
                                 print(lista_entrelazada)
                             # funciona?
                             case "2":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo)
-                                comprar_vehiculo(buscar_vehiculo(lista_entrelazada), lista_entrelazada, usuario_actual)
+                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
+                                t = True
+                                lista_filtro = []
+                                while t == True:
+                                    marca = None
+                                    modelo = None
+                                    precio = None
+                                    autonomia = None
+                                    uso = None
+                                    buscar = input("Ingrese el dato a buscar: ")
+                                    match buscar:
+                                        case "marca":
+                                            marca = input("Ingrese la marca del vehiculo: ")
+                                            marca = marca.lower()
+                                        case "modelo":
+                                            modelo = input("Ingrese el modelo del vehiculo: ")
+                                            modelo = modelo.lower()
+                                        case "precio":
+                                            precio = input("Ingrese el precio del vehiculo: ")
+                                        case "autonomia":
+                                            autonomia = input("Ingrese la autonomia del vehiculo: ")
+                                        case "uso":
+                                            uso = input("Ingrese el uso del vehiculo: ")
+                                            uso = uso.lower()
+                                    lista_filtro_1 = lista_entrelazada.buscar(marca, modelo, precio, autonomia, uso)
+                                    for i in range(len(lista_filtro_1)):
+                                        lista_filtro.append(lista_filtro_1[i])
+                                    print("Desea agregar otro filtro? (s/n)")
+                                    if input() == "s":
+                                        t = True
+                                    else:
+                                        t = False
+                                print("Vehículos encontrados:")
+                                for vehiculo in lista_filtro:
+                                    print(vehiculo)
+                                comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
                             # si, puede mejorar
                             case "3":
                                 nombre_archivo = "ventas.txt"
