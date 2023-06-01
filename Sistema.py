@@ -4,6 +4,7 @@ from getpass import *
 
 registro = RegistroUsuarios()
 usuario_actual = None  
+lista_entrelazada = ListaEnlazada()
 while True:
     print("Bienvenido")
     print("1. Registro")
@@ -13,85 +14,14 @@ while True:
     match opcion:
         # Agregar validaciones
         case "1":
-            nombre = input("Ingrese su nombre: ")
-            while validar_nombre(nombre) == False:
-                print("Nombre no válido.")
-                nombre = input("Ingrese su nombre: ")
-            dni = input("Ingrese su DNI: ")
-            d = None
-            while validar_dni(dni) == False or registro.buscar_usuario(d,dni) == False:
-                print("DNI no válido.")
-                dni = input("Ingrese su DNI: ")
-            em = None
-            email = (input("Ingrese su email: "))
-            while  validar_email(email) == False or registro.buscar_usuario(email,em) == False:
-                print("Email no válido.")
-                email = input("Ingrese su email: ")
-            email=email.lower()
-            # Agregue el getpass, simplemente por estetica, busque en internet alguna forma de ocultar la contraseña y me aparecio esto.
-            password = getpass("Ingrese su contraseña (Debe tener al menos 8 caracteres entre esos al menos una letra o numero): ")
-            password_verificacion = getpass("Ingrese su contraseña nuevamente: ")
-            while not validar_password(password) or password != password_verificacion:
-                print("Contraseña no válida.")
-                password = getpass("Ingrese su contraseña: ")
-                password_verificacion = getpass("Ingrese su contraseña nuevamente: ")
-            codigoadmin=input("Ingrese el codigo de administrador: ")
-            usuario = Usuario(nombre, dni,email, password)
-            registro.registrar_usuario(usuario)
-            if validar_email(email) == 'sistema.com.ar' and codigoadmin == '1234':
-                print('Bienvenido administrador')
-                pass
-            else:    
-                print("Usuario registrado correctamente.")
-           
+            registro.registro_user()
         case "2":
-            email = input("Ingrese su email: ")
-            email=email.lower()
-            p = input("Desea ver la contraseña que ingresaste? (s)")
-            match p:
-                case "s":
-                    password = input("Ingrese su contraseña: ")
-                case _:
-                    password = getpass("Ingrese su contraseña: ")
-            codigoadmin = input("Ingrese el codigo de administrador: ")
-            
-            es_admin=False
-            n = True
-            while n == True:
-                if registro.iniciar_sesion(email, password):
-                    if validar_email(email)=='sistema.com.ar':
-                        while codigoadmin != '1234':
-                            print("Codigo de administrador no válido.")
-                            codigoadmin = input("Ingrese el codigo de administrador: ")
-                        es_admin=True
-                        usuario_actual = registro.usuario_actual
-                        n = False
-                        
-                    else:
-                        usuario_actual = registro.usuario_actual
-                        n = False
-                else:
-                    print("Email o contraseña incorrectos.")
-                    salir = input("¿Desea salir del programa? (s/n): ")
-                    salir = salir.lower()
-                    if salir == "s":
-                        exit()
-                        
-                    else:
-                        email = input("Ingrese su email: ")
-                        email=email.lower()
-                        p = input("Desea ver la contraseña que ingresaste? (s)")
-                        match p:
-                            case "s":
-                                password = input("Ingrese su contraseña: ")
-                            case _:
-                                password = getpass("Ingrese su contraseña: ")
-                        n = True
-            print(f'Bienvenido {usuario_actual.nombre}')      
+            usuario_actual = registro.iniciar_sesion()
+            print(f'Bienvenido {usuario_actual.nombre}')     
             s = True
             while s == True:
                 if usuario_actual is not None:
-                    if es_admin:
+                    if registro.es_admin:
                         print('1. Agregar vehiculo')
                         print('2. Eliminar vehiculo')
                         print('3. Modificar vehiculo')
@@ -102,38 +32,32 @@ while True:
                         match opcion:
                             # Funciona
                             case "1":
-                                nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
-                                i = numero_id()
-                                n=True
-                                while n==True:
-                                    agregar_vehiculo_tipo(n, lista_entrelazada, str(i))
-
+                                i = numero_id(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+                                n = True 
+                                while n == True:
+                                    agregar_vehiculo_tipo(n, lista_entrelazada.descargar_stock("stock.txt", registro.es_admin), str(i))
                                     if input("¿Desea agregar otro vehículo? (s/n): ") == "s":
                                         i = int(i) + 1
-                                        n=True
+                                        n = True
                                     else:
-                                        n=False
-                                guardar_stock(nombre_archivo, lista_entrelazada)
+                                        n = False
+                                lista_entrelazada.guardar_stock("stock.txt")
                             # funciona
                             case "2":
-                                nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
-                                print(lista_entrelazada)
+                                print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
                                 id = input("Ingrese el id del vehiculo a eliminar: ")
                                 actual = lista_entrelazada.cabeza 
                                 while actual is not None:
                                     if actual.vehiculo.id == id:
                                         lista_entrelazada.eliminar(id)
                                         print(f"El vehiculo {actual.vehiculo.marca} {actual.vehiculo.modelo} con ID: {actual.vehiculo.id} fue eliminado.")
-                                        guardar_stock(nombre_archivo, lista_entrelazada)
+                                        lista_entrelazada.guardar_stock("stock.txt")
                                         break
                                     actual = actual.siguiente
                             # Funciona
                             case "3":
-                                lista_entrelazada = descargar_stock("stock.txt", es_admin)
                                 print("Stock actual: ")
-                                print(lista_entrelazada)
+                                print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
                                 n = True
                                 while n == True:
                                     id = input("Ingrese el id del vehiculo a modificar: ")
@@ -145,19 +69,15 @@ while True:
                                         n = True
                                     else:
                                         n = False
-                                guardar_stock("stock.txt", lista_entrelazada)
-                                
-                                
-                                
+                                lista_entrelazada.guardar_stock("stock.txt")
+                                                                
                             # Funciona
                             case "4":
-                                nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
-                                print(lista_entrelazada)
+                                print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
                             # Ver como implementar bien mathplotlib
                             case "5":
                                 nombre_archivo = "ventas.txt"
-                                descargar_lista_ventas_estadisticas(nombre_archivo, es_admin)
+                                descargar_lista_ventas_estadisticas(nombre_archivo)
 
                             # si esto no funciona estamo mal
                             case "6":
@@ -175,13 +95,11 @@ while True:
                         match opcion:
                             # Funciona
                             case "1":
-                                nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
-                                print(lista_entrelazada)
+                                print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
                             # funciona?
                             case "2":
                                 nombre_archivo = "stock.txt"
-                                lista_entrelazada = descargar_stock(nombre_archivo, es_admin)
+                                lista_entrelazada = lista_entrelazada.descargar_stock("stock.txt", registro.es_admin)
                                 t = True
                                 lista_filtro = []
                                 while t == True:
@@ -268,7 +186,7 @@ while True:
                                 s = False
                             case _:
                                 print("Opción inválida.")
-                                                        
+                                                                                                                    
         case "3":
             print("Gracias por usar el sistema.")
             exit()

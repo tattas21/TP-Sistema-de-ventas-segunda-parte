@@ -125,9 +125,9 @@ def guardar_stock(nombre_archivo, lista_entrelazada):
                 actual = actual.siguiente
     archivo.close()
     print(f"Stock guardado en el archivo {nombre_archivo}")
-def numero_id():
+def numero_id(descargar):
     try:
-        i = descargar_stock("stock.txt")
+        i = descargar
         i = i.ultimo_nodo().vehiculo.id
         i = i.split("_")[1]
         i=int(i) + 1
@@ -396,7 +396,7 @@ def descargar_stock_cliente(nombre_archivo):
     try:
         with open(nombre_archivo, "r") as archivo:
             lineas = archivo.readlines()
-            vehiculo=None
+            vehiculo = None
             for linea in lineas:
                 campos = linea.strip().split(",")
                 if campos[0] == "utilitario":

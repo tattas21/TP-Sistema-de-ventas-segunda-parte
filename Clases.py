@@ -1,3 +1,49 @@
+from getpass import *
+from Biblioteca import *
+from datetime import *
+
+def validar_email(email):
+    partes = email.split('@')
+    if len(partes) != 2:
+        return False
+    usuario = partes[0]
+    dominio = partes[1]
+    if not usuario or not dominio:
+        return False
+    if '.' not in dominio:
+        return False
+    if usuario[-1] == '.':
+        return False
+    if '..' in usuario or '..' in dominio:
+        return False
+    if dominio == 'sistema.com.ar':
+        return dominio
+    return True
+
+def validar_dni(dni):
+    if 8 < len(dni)  or  len(dni )< 7 :
+        return False
+    if not dni.isdigit():
+        return False
+    return True
+
+def validar_password(password):
+    if len(password) < 8:
+        return False
+    if not any(c.isdigit() for c in password):
+        return False
+    if not any(c.isalpha() for c in password):
+        return False
+    return True
+
+def validar_nombre(nombre):
+    if  any(c.isdigit() for c in nombre):
+        return False
+    partes = nombre.split(" ")
+    if len(partes) < 2:
+        return False
+    return True
+    
 #Clases Usuarios
 # clase usuario general de esta se hereda administrador y cliente
 class Usuario:
@@ -6,7 +52,6 @@ class Usuario:
         self.dni = dni
         self.email = email
         self.password = password
-
 
     def __str__(self):
         return f"{self.nombre} {self.dni} {self.email}"
@@ -26,13 +71,21 @@ class administrador(Usuario):
     
 
 
-class RegistroUsuarios:
+class RegistroUsuarios(Usuario):
     def __init__(self):
         self.usuarios = []
         self.archivo = "usuarios.txt"
         self.cargar_usuarios()
         self.usuario_actual = None
-
+        self.email = None
+        self.password = None
+        self.es_admin = False
+        self.nombre = None
+        self.dni = None
+        
+    def __str__(self):
+        return f"{self.nombre} {self.dni} {self.email} {self.password}"
+    
     def registrar_usuario(self, usuario):
         self.usuarios.append(usuario)
         self.guardar_usuarios()
@@ -58,12 +111,92 @@ class RegistroUsuarios:
                 print(f"El usuario ya existe")
                 return False
         return None
-    def iniciar_sesion(self, email, password):
-        for usuario in self.usuarios:
-            if usuario.email == email and usuario.password == password:
-                self.usuario_actual = usuario
-                return True
-        return False
+    
+    def registro_user(self):
+        nombre = input("Ingrese su nombre: ")
+        while validar_nombre(nombre) == False:
+            print("Nombre no válido.")
+            nombre = input("Ingrese su nombre: ")
+        dni = input("Ingrese su DNI: ")
+        d = None
+        while validar_dni(dni) == False or self.buscar_usuario(d,dni) == False:
+            print("DNI no válido.")
+            dni = input("Ingrese su DNI: ")
+        em = None
+        email = (input("Ingrese su email: "))
+        while  validar_email(email) == False or self.buscar_usuario(email,em) == False:
+            print("Email no válido.")
+            email = input("Ingrese su email: ")
+        email=email.lower()
+        # Agregue el getpass, simplemente por estetica, busque en internet alguna forma de ocultar la contraseña y me aparecio esto.
+        password = getpass("Ingrese su contraseña (Debe tener al menos 8 caracteres entre esos al menos una letra o numero): ")
+        password_verificacion = getpass("Ingrese su contraseña nuevamente: ")
+        while not validar_password(password) or password != password_verificacion:
+            print("Contraseña no válida.")
+            password = getpass("Ingrese su contraseña: ")
+            password_verificacion = getpass("Ingrese su contraseña nuevamente: ")
+        if validar_email(email) == 'sistema.com.ar':
+            codigoadmin=input("Ingrese el codigo de administrador: ")
+        usuario = Usuario(nombre, dni,email, password)
+        self.registrar_usuario(usuario)
+        if validar_email(email) == 'sistema.com.ar' and codigoadmin == '1234':
+            print('Bienvenido administrador')
+            pass
+        else:    
+            print("Usuario registrado correctamente.")    
+
+    def iniciar_sesion(self):
+        l = False
+        email = input("Ingrese su email: ")
+        email=email.lower()
+        es_admin=False
+        p = input("Desea ver la contraseña que ingresaste? (s)")
+        match p:
+            case "s":
+                password = input("Ingrese su contraseña: ")
+            case _:
+                password = getpass("Ingrese su contraseña: ")
+        n = True
+        while n == True:
+            for usuario in self.usuarios:
+                if usuario.email == email and usuario.password == password:
+                    self.nombre = usuario.nombre
+                    self.dni = usuario.dni
+                    self.email = usuario.email
+                    self.password = usuario.password
+                    self.usuario_actual = usuario
+                    l = True
+        
+            if l == True:
+                if validar_email(email)=='sistema.com.ar':
+                    codigoadmin = input("Ingrese el codigo de administrador: ")
+                    while codigoadmin != '1234':
+                        print("Codigo de administrador no válido.")
+                        codigoadmin = input("Ingrese el codigo de administrador: ")
+                    self.es_admin = True       
+                    usuario_actual = self.usuario_actual
+                    n = False
+                    
+                else:
+                    usuario_actual = self.usuario_actual
+                    n = False
+            else:
+                print("Email o contraseña incorrectos.")
+                salir = input("¿Desea salir del programa? (s/n): ")
+                salir = salir.lower()
+                if salir == "s":
+                    exit()
+                    
+                else:
+                    email = input("Ingrese su email: ")
+                    email=email.lower()
+                    p = input("Desea ver la contraseña que ingresaste? (s)")
+                    match p:
+                        case "s":
+                            password = input("Ingrese su contraseña: ")
+                        case _:
+                            password = getpass("Ingrese su contraseña: ")
+        return usuario_actual
 
 # Ver opcion sin clase
 
@@ -105,7 +238,7 @@ class Van(Vehiculo):
         self.asientos = asientos
 
     def __str__(self):
-        return super().__str__() + f", Asientos: {self.asientos}, ID: {self.id}"
+        return f"Tipo: Van" + super().__str__() + f", Asientos: {self.asientos}, ID: {self.id}"
         
 class Compacto(Vehiculo):
     def __init__(self, marca, modelo, precio, autonomia, uso,tamaño_baul, id):
@@ -227,4 +360,57 @@ class ListaEnlazada:
                     listav.append(actual.vehiculo)
                 actual = actual.siguiente
             return listav
+
+    def descargar_stock(self,nombre_archivo, variable):
+        try:
+            with open(nombre_archivo, "r") as archivo:
+                lineas = archivo.readlines()
+                vehiculo=None
+                for linea in lineas:
+                    campos = linea.strip().split(",")
+                    if campos[0] == "utilitario":
+                        if variable == True:
+                            vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                        else:
+                            vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+
+                    elif campos[0] == "deportivo":
+                        if variable == True:
+                            vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                        else:
+                            vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+                    elif campos[0] == "electrico":
+                        if variable == True:
+                            vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                        else:
+                            vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+                    elif campos[0] == "van":
+                        if variable == True:
+                            vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                        else:
+                            vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+                    elif campos[0] == "compacto":
+                        if variable == True:
+                            vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
+                        else:
+                            vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+
+                    self.agregar(vehiculo)
+            archivo.close()
+
+        except FileNotFoundError:
+            print("El archivo no existe")
+        return self
     
+    def guardar_stock(self, nombre_archivo):
+        with open(nombre_archivo, "w") as archivo:
+            if self.cabeza is not None:
+                actual = self.cabeza
+                datos=None
+                while actual is not None:
+                    datos = str(actual.vehiculo)
+                    archivo.write(f"{datos}\n")
+                    actual = actual.siguiente
+        archivo.close()
+        print(f"Stock guardado en el archivo {nombre_archivo}")
+

@@ -1,15 +1,17 @@
-utilitario,toyota,hilux,30000,750,mixto,777,TOY-HI_6
-utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_7
-utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_8
-deportivo,ford,mustang,40000,580,urbano,250,FOR-mu_9
-deportivo,porsche,911,370000,700,urbano,330,POR-91_10
-deportivo,audi,r8,300000,650,urbano,255,AUD-r8_11
-compacto,toyota,etios,12000,515,urbano,1,TOY-ET_13
-compacto,volkswagen,polo,13500,550,urbano,2,VOL-PO_14
-compacto,ford,focus,28000,600,urbano,3,FOR-FO_15
-van,volkswagen,taos,31000,730,urbano, 8,VOL-TA_16
-deportivo,subaru,wrx,43500,625,urbano,255,SUB-wr_17
-compacto,fiat,cronos,14500,580,urbano,3,FIA-CR_18
-van,bmw,x5,55000,600,urbano, 6,BMW-X5_19
-electrico,tesla,y,48500,320,urbano,12,TES-Y_20
-deportivo,ferrari,f40,550000,530,urbano,270,FER-f4_21
+Marca: ferrari, Modelo: f40, Precio: 550000,Autonomia: 530, Uso: urbano, Velocidad máxima: 270, ID: FER-f4_21
+Marca: toyota, Modelo: hilux, Precio: 30000,Autonomia: 750, Uso: mixto, Carga máxima: 777, ID: TOY-HI_6
+Marca: mercedes, Modelo: sprinter, Precio: 20000,Autonomia: 475, Uso: trabajo, Carga máxima: 3000, ID: MER-SP_7
+Marca: mercedes, Modelo: sprinter, Precio: 20000,Autonomia: 475, Uso: trabajo, Carga máxima: 3000, ID: MER-SP_8
+Marca: ford, Modelo: mustang, Precio: 40000,Autonomia: 580, Uso: urbano, Velocidad máxima: 250, ID: FOR-mu_9
+Marca: porsche, Modelo: 911, Precio: 370000,Autonomia: 700, Uso: urbano, Velocidad máxima: 330, ID: POR-91_10
+Marca: audi, Modelo: r8, Precio: 300000,Autonomia: 650, Uso: urbano, Velocidad máxima: 255, ID: AUD-r8_11
+Marca: toyota, Modelo: etios, Precio: 12000,Autonomia: 515, Uso: urbano, Tamaño del baul: 1, ID: TOY-ET_13
+Marca: volkswagen, Modelo: polo, Precio: 13500,Autonomia: 550, Uso: urbano, Tamaño del baul: 2, ID: VOL-PO_14
+Marca: ford, Modelo: focus, Precio: 28000,Autonomia: 600, Uso: urbano, Tamaño del baul: 3, ID: FOR-FO_15
+Marca: volkswagen, Modelo: taos, Precio: 31000,Autonomia: 730, Uso: urbano, Asientos: 8, ID: VOL-TA_16
+Marca: subaru, Modelo: wrx, Precio: 43500,Autonomia: 625, Uso: urbano, Velocidad máxima: 255, ID: SUB-wr_17
+Marca: fiat, Modelo: cronos, Precio: 14500,Autonomia: 580, Uso: urbano, Tamaño del baul: 3, ID: FIA-CR_18
+Marca: bmw, Modelo: x5, Precio: 55000,Autonomia: 600, Uso: urbano, Asientos: 6, ID: BMW-X5_19
+Marca: tesla, Modelo: y, Precio: 48500,Autonomia: 320, Uso: urbano, Tiempo de carga: 12, ID: TES-Y_20
+Marca: ferrari, Modelo: f40, Precio: 550000,Autonomia: 530, Uso: urbano, Velocidad máxima: 270, ID: FER-f4_21
+Marca: bmq, Modelo: x5, Precio: 50000,Autonomia: 600, Uso: urbano, Asientos: 5, ID: BMQ-X5_22
