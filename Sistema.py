@@ -5,6 +5,8 @@ from getpass import *
 registro = RegistroUsuarios()
 usuario_actual = None  
 lista_entrelazada = ListaEnlazada()
+# compra = Compra(Usuario, Vehiculo, datetime)
+consulta_manager = ConsultaManager()
 while True:
     print("Bienvenido")
     print("1. Registro")
@@ -25,9 +27,10 @@ while True:
                         print('1. Agregar vehiculo')
                         print('2. Eliminar vehiculo')
                         print('3. Modificar vehiculo')
-                        print('4. ver stcok')
-                        print('5. ver ventas')
-                        print('6. cerrar sesion')
+                        print('4. Ver stcok')
+                        print('5. Ver ventas')
+                        print('6. Responder soporte tecnico')
+                        print('7. cerrar sesion')
                         opcion = input("Ingrese una opción (el numero): ")
                         match opcion:
                             # Funciona
@@ -78,9 +81,10 @@ while True:
                             case "5":
                                 nombre_archivo = "ventas.txt"
                                 descargar_lista_ventas_estadisticas(nombre_archivo)
-
-                            # si esto no funciona estamo mal
                             case "6":
+                                consulta_manager.responder_consulta()
+                            # si esto no funciona estamo mal
+                            case "7":
                                 print("Gracias por usar el sistema.")
                                 s = False
                             case _:
@@ -90,7 +94,8 @@ while True:
                         print('2. Comprar vehiculo')
                         print('3. Ver mis compras')
                         print('4. Modificar mis datos')
-                        print('5. Cerrar sesion')
+                        print('5. Soporte Tecnico')
+                        print('6. Cerrar sesion')
                         opcion = input("Ingrese una opción (el numero): ")
                         match opcion:
                             # Funciona
@@ -134,7 +139,7 @@ while True:
                                 print("Vehículos encontrados:")
                                 for vehiculo in lista_filtro:
                                     print(vehiculo)
-                                comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
+                                compra.comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
                             # si, puede mejorar
                             case "3":
                                 nombre_archivo = "ventas.txt"
@@ -154,6 +159,7 @@ while True:
                                     print("No se encontró el archivo.")
                                 print("1. Modificar nombre")
                                 print("2. Modificar contraseña")
+                                print("3. Salir")
                                 opcion = input("Ingrese una opción (el numero): ")
                                 match opcion:
                                     case "1":
@@ -171,6 +177,8 @@ while True:
                                         for i in range(len(lista_entrelazada)):
                                             if lista_entrelazada[i][2] == usuario_actual.email:
                                                 lista_entrelazada[i][3] = password
+                                    case "3":
+                                        break
                                     case _:
                                         print("Opción inválida.")
                                 with open(nombre_archivo, "w") as archivo:
@@ -180,13 +188,26 @@ while True:
 
 
 
-                            
                             case "5":
+                                print('Menu de soporte tecnico')
+                                print('1. Hacer una consulta')
+                                print('2. Ver mis consultas')
+                                print('3. Salir')
+                                opcion = input("Ingrese una opción (el numero): ")
+                                match opcion:
+                                    case "1":
+                                        consulta_manager.hacer_consulta(usuario_actual.dni, input("Ingrese su consulta: "))
+                                    case "2":
+                                        consulta_manager.cargar_consultas()
+                                        consulta_manager.obtener_preguntas(usuario_actual.dni)
+                                    case "3":
+                                        break
+                            case "6":
                                 print("Gracias por usar el sistema.")
                                 s = False
                             case _:
                                 print("Opción inválida.")
-                                                                                                                    
+
         case "3":
             print("Gracias por usar el sistema.")
             exit()
