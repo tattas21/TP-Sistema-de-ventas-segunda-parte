@@ -1,10 +1,2 @@
-44556655,como puede ser,True,no se
-44556655,no lo se,True,yo meno
-44556655,como?,True,y no se
-44556655,funciona?funciona?,True,si
-44556655,porfa,True,chau
-44556655,y?,True,y que
-44556655,esta?,True,estaaa
-44556655,ahoraaaa?,True,siii
-44556655,sera?,True,obvio
-44556655,comohago?,True,no se
+tomas lopez 12121212 tlopez@itba.edu.ar,sol,True,no
+tomas lopez 12121212 tlopez@itba.edu.ar,coco,False,None

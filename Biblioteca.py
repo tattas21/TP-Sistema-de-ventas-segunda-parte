@@ -1,8 +1,9 @@
-from Clases import *
 from datetime import *
 from random import *
 from matplotlib import pyplot as plt
 import numpy as np
+from Vehiculos import *
+from Stock import *
 # validaciones
 def lista_a_lista_listaentrelazada(lista, Nodo):
     if not lista:
@@ -56,73 +57,6 @@ def validar_nombre(nombre):
         return False
     return True
     
-
-def descargar_stock(nombre_archivo, variable):
-    lista_entrelazada = ListaEnlazada()
-    try:
-        with open(nombre_archivo, "r") as archivo:
-            lineas = archivo.readlines()
-            vehiculo=None
-            for linea in lineas:
-                campos = linea.strip().split(",")
-                if campos[0] == "utilitario":
-                    if variable == True:
-                        vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                    else:
-                        vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-
-                elif campos[0] == "deportivo":
-                    if variable == True:
-                        vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                    else:
-                        vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "electrico":
-                    if variable == True:
-                        vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                    else:
-                        vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "van":
-                    if variable == True:
-                        vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                    else:
-                        vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "compacto":
-                    if variable == True:
-                        vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                    else:
-                        vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-
-                lista_entrelazada.agregar(vehiculo)
-        archivo.close()
-
-    except FileNotFoundError:
-        print("El archivo no existe")
-    return lista_entrelazada
-
-def guardar_stock(nombre_archivo, lista_entrelazada):
-    with open(nombre_archivo, "w") as archivo:
-        if lista_entrelazada.cabeza is not None:
-            actual = lista_entrelazada.cabeza
-            tipo= None
-            datos=None
-            while actual is not None:
-                if isinstance(actual.vehiculo, Utilitario):
-                    tipo = "utilitario"
-                    datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso},{actual.vehiculo.carga_maxima},{actual.vehiculo.id}\n"
-                elif isinstance(actual.vehiculo, Deportivo):
-                    tipo = "deportivo"
-                    datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso},{actual.vehiculo.velocidad_maxima},{actual.vehiculo.id}\n"
-                elif isinstance(actual.vehiculo, Electrico):
-                    tipo = "electrico"
-                    datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso},{actual.vehiculo.tiempo_carga},{actual.vehiculo.id}\n"
-                elif isinstance(actual.vehiculo, Van):
-                    tipo = "van"
-                    datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso}, {actual.vehiculo.asientos},{actual.vehiculo.id}\n"
-                elif isinstance(actual.vehiculo, Compacto):
-                    tipo = "compacto"
-                    datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso},{actual.vehiculo.tamaño_baul},{actual.vehiculo.id}\n"
-                archivo.write(f"{tipo},{datos}")
-                actual = actual.siguiente
     archivo.close()
     print(f"Stock guardado en el archivo {nombre_archivo}")
 def numero_id(descargar):
@@ -191,22 +125,6 @@ def agregar_vehiculo_tipo(n, lista_entrelazada,i):
             case _:
                 print("Tipo de vehículo no válido")
 
-def eliminar_vehiculo(lista_entrelazada):
-    lista=lista_entrelazada.list()
-    print(lista)
-    n=False
-    while n==False:
-        marca=input("Ingrese la marca del vehículo que desea eliminar: ")
-        modelo=input("Ingrese el modelo del vehículo que desea eliminar: ")
-        for i in lista:
-            if i.marca==marca and i.modelo==modelo:
-                lista_entrelazada.eliminar(i)
-                print(f"Se eliminó el vehículo {str(i)} del stock")
-                n=True
-            else:
-                print("Vehículo no encontrado")
-                n=True
-
 def comprar_vehiculo(vehiculos_filtrados, lista, usuario):
     n=False
     archivo=open("ventas.txt", "a")
@@ -265,8 +183,7 @@ def comprar_vehiculo(vehiculos_filtrados, lista, usuario):
     archivo.close()
     return vehiculos_filtrados
 
-def descargar_lista_ventas(nombre_archivo, usuario_actual):
-    lista_entrelazada = ListaEnlazada()
+def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
     try:
         with open(nombre_archivo, "r") as archivo:
             lineas = archivo.readlines()
@@ -274,15 +191,15 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual):
             contador = 0
             total = 0
             contadormarca = 0
-            tupla_marca = ()
-            tupla_contador = ()
+            lista_marca = []
+            lista_contador = []
             for linea in lineas:
                 campos = linea.strip().split(",")
-                if campos[0] == usuario_actual.email:
-                    compra = (f"Mail: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
+                if campos[0] == usuario_actual.dni:
+                    compra = (f"Dni: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
                     contador += 1
                     total += int(campos[4])
-                    lista_entrelazada.agregar(compra)   
+                    lista.agregar(compra)   
             archivo.close()
             
             l = True
@@ -293,7 +210,7 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual):
                 match opcion:    
                     case "1":
                         print("Total de compras por marca")
-                        lista_entrelazada1 = lista_entrelazada.list()
+                        lista_entrelazada1 = lista.list()
                         for i in range(len(lista_entrelazada1)):
                             marca = lista_entrelazada1[i]
                             marca = marca.split(", ")[2]
@@ -306,19 +223,18 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual):
                                 if marca2 == marca:
                                     contadormarca += 1
                                         
-                            if marca not in tupla_marca: 
-                                tupla_marca += tuple(marca.split())
-                                tupla_contador += tuple(str(contadormarca).split())
-                            if marca in tupla_marca:
+                            if marca not in lista_marca: 
+                                lista_marca.append(marca.split())
+                                lista_contador.append(str(contadormarca).split())
+                            if marca in lista_marca:
                                 pass
                                     
                         
-                                
-                        labels = tupla_marca
-                        sizes = convertir_tupla_en_lista(tupla_contador)
+                        fig1, ax1 = plt.subplots()        
+                        labels = lista_marca
+                        size = lista_contador
 
-                        fig1, ax1 = plt.subplots()
-                        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                        ax1.pie(size, labels=labels, autopct='%1.1f%%',
                         shadow=True, startangle=90)
                         ax1.axis('equal')
 
@@ -344,7 +260,7 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual):
                             l = False
                     case "4":
                         print("------------------------------Detalle de compras realizadas------------------------------")
-                        print(lista_entrelazada)
+                        print(lista)
                         inp = input("Desea ver otra estadistica(s/n): ")
                         if inp == "s":
                             l = True
@@ -358,64 +274,8 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual):
     except FileNotFoundError:
         print("No ha realizado ninguna compra")
     
-def modificar_datos(lista, usuario):
-    registro=RegistroUsuarios()
-    n=False
-    while n==False:
-        dato=input("Ingrese el dato que desea modificar: ")
-        dato=dato.lower()
-        match dato:
-            case "nombre":
-                usuario.nombre=input("Ingrese el nuevo nombre: ")
-                n=True
-            case "email":
-                usuario.email=input("Ingrese el nuevo email: ")
-                n=True
-            case "contraseña":
-                usuario.contraseña=input("Ingrese la nueva contraseña: ")
-                n=True
-            case _:
-                print("Dato no válido")
-                n=True
-    registro.cargar_usuarios(usuario)
 
-def saque_todos_int(string):
-    id = ""
-    for i in string:
-        try:
-            int(i)
-            id += i
-        except:
-            if i == "_":
-                id = id[::-1]
-                return id 
-            pass
 
-def descargar_stock_cliente(nombre_archivo):
-    lista_entrelazada = ListaEnlazada()
-    try:
-        with open(nombre_archivo, "r") as archivo:
-            lineas = archivo.readlines()
-            vehiculo = None
-            for linea in lineas:
-                campos = linea.strip().split(",")
-                if campos[0] == "utilitario":
-                    vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "deportivo":
-                    vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "elictrico":
-                    vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "van":
-                    vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                elif campos[0] == "compacto":
-                    vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-                lista_entrelazada.agregar(vehiculo)
-                
-        archivo.close()
-
-    except FileNotFoundError:
-        print("El archivo no existe")
-    return lista_entrelazada
 
 def convertir_tupla_en_lista(tupla):
     lista = []
@@ -424,8 +284,7 @@ def convertir_tupla_en_lista(tupla):
     return lista
 
 
-def descargar_lista_ventas_estadisticas(nombre_archivo):
-    lista_entrelazada = ListaEnlazada()
+def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
     try:
         with open(nombre_archivo, "r") as archivo:
             lineas = archivo.readlines()
@@ -441,7 +300,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
             for linea in lineas:
                 campos = linea.strip().split(",")
                 compra = (f"Mail: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
-                lista_entrelazada.agregar(compra)
+                lista.agregar(compra)
                 recaudacion += int(campos[4])
                 contador += 1
                 
@@ -455,12 +314,13 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
             print("3. Recaudacion total")
             print("4. Cantidad de autos vendidos")
             print("5. Detalle de todas las ventas")
-            print("6. Salir")
+            print("6. Clientes distintos por mes")
+            print("7. Volver al menu principal")
             op = input("Ingrese la opcion que desea(numero): ")
             match op:
                 case "1":
 
-                    lista_entrelazada1 = lista_entrelazada.list()
+                    lista_entrelazada1 = lista.list()
                     for i in range(len(lista_entrelazada1)):
                         marca = lista_entrelazada1[i]
                         marca = marca.split(", ")[2]
@@ -496,7 +356,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                     else:
                         l = False
                 case "2":
-                    lista_entrelazada2 = lista_entrelazada.list()
+                    lista_entrelazada2 = lista.list()
                     for i in range(len(lista_entrelazada2)):
                         fecha = lista_entrelazada2 [i]
                         fecha = fecha.split(", ")[1]
@@ -521,8 +381,6 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                     fig, ax = plt.subplots()
                     x = lista_fecha
                     counts = lista_precio
-                    # for i in range(len(counts)):
-                    #     counts[i] = int(counts[i])
                     ax.bar(x, counts)
                     ax.set_ylabel('Recaudación')
                     ax.set_title('Recaudación Total por Día')          
@@ -548,7 +406,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                         l = False
                 case "5":
                     print("Detalle de las ventas:")
-                    lista_entrelazada4 = lista_entrelazada.list()
+                    lista_entrelazada4 = lista.list()
                     for i in range(len(lista_entrelazada4)):
                         print(lista_entrelazada4[i])
                     inp = input("Desea ver otra estadistica(s/n): ")
@@ -556,10 +414,189 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                         l = True
                     else:
                         l = False
-                case "6":
+                case"6":
+                    lista_dni=[]
+                    lista_puntos6=[]
+                    conjunto_dni={}
+                    lista_puntos6=[]
+                    cont_dni=0
+                    n=True
+                    while n:
+                        mes = str(input("ingrese mes fecha de la estadistica:"))
+                        while mes.isdigit() == False:
+                            mes = input("ingrese un numero: ")
+                        n=False
+                        if int(mes)>12:
+                            print("ingrese un numero entre 1-12")
+                            n=True
+                    lista_entrelazada6 = lista.list()
+
+                    for i in range(0,len(lista_entrelazada6)):
+                        lista_punto6=lista_entrelazada6[i].split(",")
+                        lista_punto6[1]=lista_punto6[1].split("Fecha: ")[1]
+                        lista_puntos6.append([lista_punto6[0],lista_punto6[1]])
+                    for i in lista_puntos6:
+                        fecha_mes= datetime.strptime(i[1], '%Y-%m-%d')
+                        fecha_mes=fecha_mes.month
+                        if mes==str(fecha_mes):
+
+                            lista_dni.append(i[0])
+                            conjunto_dni=set(lista_dni)
+
+                    if conjunto_dni!={}:
+                        for i in conjunto_dni:
+                            cont_dni+=1
+                        print(f"la cantidad de compradores en este mes fue {cont_dni}, y fueron:")
+                        for i in conjunto_dni:
+                            print(i)
+                    else:
+                        print("No se han hecho compras en ese mes")
+                
+                case "7":
                     l = False
                 case _:
                     print("Dato no válido")
                     l = True
     except FileNotFoundError:
         print("No ha realizado ninguna compra")
+
+def menu(registro, usuario_actual):
+    if usuario_actual is None:
+        print("Bienvenido")
+        print("1. Registro")
+        print("2. Inicio de sesión")
+        print("3. Salir")
+        opcion = input("Ingrese una opción (el numero): ")
+        return opcion
+    
+    elif registro.es_admin:
+        print('1. Agregar vehiculo')
+        print('2. Eliminar vehiculo')
+        print('3. Modificar vehiculo')
+        print('4. Ver stcok')
+        print('5. Ver ventas')
+        print('6. Responder soporte tecnico')
+        print('7. cerrar sesion')
+        op = input("Ingrese una opción (el numero): ")
+        opcion = [True, op]
+        return opcion
+    else:
+        print('1. Ver stock')
+        print('2. Comprar vehiculo')
+        print('3. Ver mis compras')
+        print('4. Modificar mis datos')
+        print('5. Soporte Tecnico')
+        print('6. Cerrar sesion')
+        op = input("Ingrese una opción (el numero): ")
+        opcion = [False, op]
+        return opcion
+    
+def menu_admin(lista_entrelazada, registro, consulta_manager, opcion):
+    match opcion:
+        case "1":
+            lista_entrelazada.agregar_vehiculo(registro.es_admin)
+            return True
+        # funciona
+        case "2":
+            print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+            lista_entrelazada.eliminar_vehiculo()
+            return True
+        # Funciona
+        case "3":
+            print("Stock actual: ")
+            print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+            lista_entrelazada.modificar_dato_vehiculo()
+            return True
+        # Funciona
+        case "4":
+            print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+            return True
+        # Ver como implementar bien mathplotlib
+        case "5":
+            nombre_archivo = "ventas.txt"
+            descargar_lista_ventas_estadisticas(nombre_archivo, lista = ListaEnlazada())
+            return True
+        case "6":
+            consulta_manager.responder_consulta()
+            return True
+        # si esto no funciona estamo mal
+        case "7":
+            print("Gracias por usar el sistema.")
+            return False
+        case _:
+            print("Opción inválida.")
+            return True
+
+def menu_cliente(lista_entrelazada, registro, consulta_manager, usuario_actual, opcion):
+    match opcion:
+        # Funciona
+        case "1":
+            print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+            return True
+        # funciona?
+        case "2":
+            lista_entrelazada.descargar_stock("stock.txt", registro.es_admin)
+            t = True
+            lista_filtro = []
+            while t == True:
+                marca = None
+                modelo = None
+                precio = None
+                autonomia = None
+                uso = None
+                buscar = input("Ingrese el dato a buscar: ")
+                match buscar:
+                    case "marca":
+                        marca = input("Ingrese la marca del vehiculo: ")
+                        marca = marca.lower()
+                    case "modelo":
+                        modelo = input("Ingrese el modelo del vehiculo: ")
+                        modelo = modelo.lower()
+                    case "precio":
+                        precio = input("Ingrese el precio del vehiculo: ")
+                    case "autonomia":
+                        autonomia = input("Ingrese la autonomia del vehiculo: ")
+                    case "uso":
+                        uso = input("Ingrese el uso del vehiculo: ")
+                        uso = uso.lower()
+                lista_filtro_1 = lista_entrelazada.buscar(marca, modelo, precio, autonomia, uso)
+                for i in range(len(lista_filtro_1)):
+                    lista_filtro.append(lista_filtro_1[i])
+                print("Desea agregar otro filtro? (s/n)")
+                if input() == "s":
+                    t = True
+                else:
+                    t = False
+            print("Vehículos encontrados:")
+            for vehiculo in lista_filtro:
+                print(vehiculo)
+            compra.comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
+            return True
+        # si, puede mejorar
+        case "3":
+            descargar_lista_ventas("ventas.txt", usuario_actual, lista = ListaEnlazada())
+            return True
+        # casiquesi
+        case "4":
+            registro.modificar_dato(usuario_actual)
+            return True
+        
+        case "5":
+            consulta_manager.menu_consulta(usuario_actual)
+            return True
+        case "6":
+            print("Gracias por usar el sistema.")
+            return False
+        case _:
+            print("Opción inválida.")
+            return True
+def menu_usuario(registro, lista_entrelazada, consulta_manager):
+    usuario_actual = registro.iniciar_sesion()     
+    s = True
+    while s == True:
+        if usuario_actual is not None:
+            opcion = menu(registro, usuario_actual)
+            if opcion[0] == True:
+                s = menu_admin(lista_entrelazada, registro, consulta_manager, opcion[1])
+            else:
+                s = menu_cliente(lista_entrelazada, registro, consulta_manager, usuario_actual,opcion[1])
