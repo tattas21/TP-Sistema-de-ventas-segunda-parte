@@ -1,11 +1,7 @@
-from Biblioteca import *
-from getpass import *
-from datetime import *
-from Usuario import *
-from Vehiculos import *
 from Stock import *
 from ConsultaManager import *
 from Registro_usuario import *
+from Menu import *
 
 registro = RegistroUsuarios()
 usuario_actual = None  
