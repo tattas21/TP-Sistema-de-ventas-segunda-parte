@@ -62,14 +62,16 @@ class ConsultaManager:
                     respuesta = datos[3] if respondida == "True" else None
                     consulta = Pregunta(user, pregunta, respondida, respuesta)
                     self.consultas.encolar(consulta)
+            archivo.close()
         except FileNotFoundError:
             pass
 
     def guardar_consultas(self):
 # Guarda las consultas en un archivo de texto. Cada consulta se guarda en una línea separada con los datos correspondientes.
-        with open("consultas.txt", "w") as file:
+        with open("consultas.txt", "w") as archivo:
             for consulta in self.consultas.items:
-                file.write(f"{consulta.user},{consulta.pregunta},{consulta.respondida},{consulta.respuesta}\n")
+                archivo.write(f"{consulta.user},{consulta.pregunta},{consulta.respondida},{consulta.respuesta}\n")
+        archivo.close()
 
     def obtener_preguntas(self, user):
 # Obtiene las preguntas (con respuesta y sin respuesta) de un usuario específico (Basandose en el DNI) y las muestra por pantalla.

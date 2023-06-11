@@ -1,4 +1,6 @@
 from Stock import *
+from Biblioteca import *
+
 def menu(registro, usuario_actual):
     if usuario_actual is None:
         print("Bienvenido")
@@ -70,7 +72,13 @@ def menu_cliente(lista_entrelazada, registro, consulta_manager, usuario_actual, 
     match opcion:
         # Funciona
         case "1":
-            print(lista_entrelazada.descargar_stock("stock.txt", registro.es_admin))
+            lista_entrelazada.descargar_stock("stock.txt", registro.es_admin)
+            
+            actual = lista_entrelazada.cabeza
+            while actual is not None:
+                actual.vehiculo.id = None
+                print(actual.vehiculo)
+                actual = actual.siguiente
             return True
         # funciona?
         case "2":
@@ -108,8 +116,10 @@ def menu_cliente(lista_entrelazada, registro, consulta_manager, usuario_actual, 
                     t = False
             print("Vehículos encontrados:")
             for vehiculo in lista_filtro:
-                print(vehiculo)
-            compra.comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
+                v = vehiculo
+                v.id = None
+                print(v)
+            comprar_vehiculo(lista_filtro, lista_entrelazada, usuario_actual)
             return True
         # si, puede mejorar
         case "3":

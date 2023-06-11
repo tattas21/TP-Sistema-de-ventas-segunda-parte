@@ -1,6 +1,7 @@
 from datetime import *
 from matplotlib import pyplot as plt
 from Vehiculos import *
+from Stock import *
 # validaciones
 def lista_a_lista_listaentrelazada(lista, Nodo):
     if not lista:
@@ -54,78 +55,16 @@ def validar_nombre(nombre):
         return False
     return True
     
-    archivo.close()
-    print(f"Stock guardado en el archivo {nombre_archivo}")
-def numero_id(descargar):
-    try:
-        i = descargar
-        i = i.ultimo_nodo().vehiculo.id
-        i = i.split("_")[1]
-        i=int(i) + 1
-        i = str(i)
-    except AttributeError:
-        i = 0
-        i = str(i)
-    return i
 
-def agregar_vehiculo_tipo(n, lista_entrelazada,i):
-    l = True
-    while l:
-        tipo= input("Ingrese el tipo de vehículo que desea agregar: ")
-        tipo=tipo.lower()
-        match tipo:
-            case "utilitario":
-                marca = input("Ingrese la marca del vehículo: ")
-                modelo = input("Ingrese el modelo del vehículo: ")
-                id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                nuevo_auto = Utilitario(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(),int(input("Ingrese la carga máxima del vehículo: ")), id)
-                n=False
-                lista_entrelazada.agregar(nuevo_auto)
-                print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                return n
-            case "deportivo":
-                marca = input("Ingrese la marca del vehículo: ")
-                modelo = input("Ingrese el modelo del vehículo: ")
-                id = marca[0:3].upper() + "-" +modelo[0:2].lower()+ "_" + i
-                nuevo_auto = Deportivo(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(), int(input("Ingrese la velocidad máxima del vehículo: ")), id)
-                n=False
-                lista_entrelazada.agregar(nuevo_auto)
-                print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                return n
-            case "electrico":
-                marca = input("Ingrese la marca del vehículo: ")
-                modelo = input("Ingrese el modelo del vehículo: ")
-                id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                nuevo_auto = Electrico(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tiempo de carga del vehículo: ")), id)
-                n=False
-                lista_entrelazada.agregar(nuevo_auto)
-                print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                return n
-            case "van":
-                marca = input("Ingrese la marca del vehículo: ")
-                modelo = input("Ingrese el modelo del vehículo: ")
-                id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                nuevo_auto = Van(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese la cantidad de asientos del vehículo: ")), id)
-                n=False
-                lista_entrelazada.agregar(nuevo_auto)
-                print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                return n
-            case "compacto":
-                marca = input("Ingrese la marca del vehículo: ")
-                modelo = input("Ingrese el modelo del vehículo: ")
-                id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                nuevo_auto = Compacto(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tamaño del baul del vehículo: ")), id)
-                n=False
-                lista_entrelazada.agregar(nuevo_auto)
-                print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                return n
-            case _:
-                print("Tipo de vehículo no válido")
 
 def comprar_vehiculo(vehiculos_filtrados, lista, usuario):
     n=False
     archivo=open("ventas.txt", "a")
     fecha_hora = datetime.now().date()
+    if len(vehiculos_filtrados)==0:
+        print("No hay vehículos que cumplan con los filtros ingresados.")
+        archivo.close()
+        return
     while n==False:
         marca_vehiculo=input("Ingrese la marca del vehículo que desea comprar: ")
         modelo_vehiculo=input("Ingrese el modelo del vehículo que desea comprar: ")
@@ -168,16 +107,18 @@ def comprar_vehiculo(vehiculos_filtrados, lista, usuario):
                             vehiculo_comprado = actual.vehiculo
                             id = vehiculo_comprado.id
                             lista.eliminar(id)
-                            dato = f"{usuario.email},{fecha_hora},{vehiculo_comprado.marca},{vehiculo_comprado.modelo},{vehiculo_comprado.precio}\n"
+                            dato = f"{usuario.dni},{fecha_hora},{vehiculo_comprado.marca},{vehiculo_comprado.modelo},{vehiculo_comprado.precio}\n"
                             archivo.write(f'{dato}')
+                            archivo.close()
                             break
                         actual = actual.siguiente
-                    guardar_stock("stock.txt",lista)
+                    lista.guardar_stock("stock.txt")
                     n=True
                     b=False
+                return vehiculos_filtrados
             else:
                 n=True
-    archivo.close()
+            
     return vehiculos_filtrados
 
 def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
@@ -193,7 +134,7 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
             for linea in lineas:
                 campos = linea.strip().split(",")
                 if campos[0] == usuario_actual.dni:
-                    compra = (f"Dni: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
+                    compra = (f"DNI: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
                     contador += 1
                     total += int(campos[4])
                     lista.agregar(compra)   
@@ -296,7 +237,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
             
             for linea in lineas:
                 campos = linea.strip().split(",")
-                compra = (f"Mail: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
+                compra = (f"DNI: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
                 lista.agregar(compra)
                 recaudacion += int(campos[4])
                 contador += 1
@@ -402,7 +343,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     else:
                         l = False
                 case "5":
-                    print("Detalle de las ventas:")
+                    print("------------------------------ Detalle de las ventas ------------------------------")
                     lista_entrelazada4 = lista.list()
                     for i in range(len(lista_entrelazada4)):
                         print(lista_entrelazada4[i])
@@ -420,12 +361,9 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     n=True
                     while n:
                         mes = str(input("ingrese mes fecha de la estadistica:"))
-                        while mes.isdigit() == False:
-                            mes = input("ingrese un numero: ")
+                        while mes.isdigit() == False or int(mes)>12 :
+                            mes = input("ingrese un numero entre 1-12: ")
                         n=False
-                        if int(mes)>12:
-                            print("ingrese un numero entre 1-12")
-                            n=True
                     lista_entrelazada6 = lista.list()
 
                     for i in range(0,len(lista_entrelazada6)):

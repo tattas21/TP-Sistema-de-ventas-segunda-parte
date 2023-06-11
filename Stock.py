@@ -134,31 +134,16 @@ class Stock(ListaEnlazada):
                 for linea in lineas:
                     campos = linea.strip().split(",")
                     if campos[0] == "utilitario":
-                        if variable == True:
                             vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                        else:
-                            vehiculo = Utilitario(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
-
                     elif campos[0] == "deportivo":
-                        if variable == True:
                             vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                        else:
-                            vehiculo = Deportivo(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                     elif campos[0] == "electrico":
-                        if variable == True:
                             vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                        else:
-                            vehiculo = Electrico(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                     elif campos[0] == "van":
-                        if variable == True:
                             vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                        else:
-                            vehiculo = Van(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
                     elif campos[0] == "compacto":
-                        if variable == True:
                             vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), (campos[7]))
-                        else:
-                            vehiculo = Compacto(campos[1], campos[2], int(campos[3]), int(campos[4]), (campos[5]), int(campos[6]), None)
+                        
 
                     self.agregar(vehiculo)
             archivo.close()
@@ -191,6 +176,9 @@ class Stock(ListaEnlazada):
                         datos = f"{actual.vehiculo.marca},{actual.vehiculo.modelo},{actual.vehiculo.precio},{actual.vehiculo.autonomia},{actual.vehiculo.uso},{actual.vehiculo.tamaño_baul},{actual.vehiculo.id}\n"
                     archivo.write(f"{tipo},{datos}")
                     actual = actual.siguiente
+        archivo.close()
+        print(f"Stock guardado en el archivo {nombre_archivo}")
+
 
     def eliminar_vehiculo(self):
         id = input("Ingrese el id del vehiculo a eliminar: ")
@@ -210,20 +198,89 @@ class Stock(ListaEnlazada):
             dato = dato.lower()
             nuevo_dato = input("Ingrese el nuevo dato: ")
             self.modificar(id, dato, nuevo_dato)
-            print("Desea modificar otro dato? (s/n)")
-            if input() == "s":
+            input = input("Desea modificar otro dato? (s/n): ")
+            input = input.lower()
+            if input == "s":
                 n = True
             else:
                 n = False
         self.guardar_stock("stock.txt")
     def agregar_vehiculo(self, registro):
-        i = numero_id(self.descargar_stock("stock.txt", registro))
+        self.descargar_stock("stock.txt", registro)
+        i = self.numero_id()
+        self.vaciar()
+        self.descargar_stock("stock.txt", registro)
         n = True 
         while n == True:
-            agregar_vehiculo_tipo(n, self.descargar_stock("stock.txt", registro), str(i))
+            self.agregar_vehiculo_tipo(str(i))
             if input("¿Desea agregar otro vehículo? (s/n): ") == "s":
                 i = int(i) + 1
                 n = True
             else:
                 n = False
         self.guardar_stock("stock.txt")
+    
+    def agregar_vehiculo_tipo(self,i):
+        n = True
+        l = True
+        while l:
+            tipo= input("Ingrese el tipo de vehículo que desea agregar: ")
+            tipo=tipo.lower()
+            match tipo:
+                case "utilitario":
+                    marca = input("Ingrese la marca del vehículo: ")
+                    modelo = input("Ingrese el modelo del vehículo: ")
+                    id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
+                    nuevo_auto = Utilitario(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(),int(input("Ingrese la carga máxima del vehículo: ")), id)
+                    n=False
+                    self.agregar(nuevo_auto)
+                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                    return n
+                case "deportivo":
+                    marca = input("Ingrese la marca del vehículo: ")
+                    modelo = input("Ingrese el modelo del vehículo: ")
+                    id = marca[0:3].upper() + "-" +modelo[0:2].lower()+ "_" + i
+                    nuevo_auto = Deportivo(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(), int(input("Ingrese la velocidad máxima del vehículo: ")), id)
+                    n=False
+                    self.agregar(nuevo_auto)
+                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                    return n
+                case "electrico":
+                    marca = input("Ingrese la marca del vehículo: ")
+                    modelo = input("Ingrese el modelo del vehículo: ")
+                    id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
+                    nuevo_auto = Electrico(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tiempo de carga del vehículo: ")), id)
+                    n=False
+                    self.agregar(nuevo_auto)
+                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                    return n
+                case "van":
+                    marca = input("Ingrese la marca del vehículo: ")
+                    modelo = input("Ingrese el modelo del vehículo: ")
+                    id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
+                    nuevo_auto = Van(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese la cantidad de asientos del vehículo: ")), id)
+                    n=False
+                    self.agregar(nuevo_auto)
+                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                    return n
+                case "compacto":
+                    marca = input("Ingrese la marca del vehículo: ")
+                    modelo = input("Ingrese el modelo del vehículo: ")
+                    id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
+                    nuevo_auto = Compacto(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tamaño del baul del vehículo: ")), id)
+                    n=False
+                    self.agregar(nuevo_auto)
+                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                    return n
+                case _:
+                    print("Tipo de vehículo no válido")
+    def numero_id(self):
+        try:
+            i = self.ultimo_nodo().vehiculo.id
+            i = i.split("_")[1]
+            i=int(i) + 1
+            i = str(i)
+        except AttributeError:
+            i = 0
+            i = str(i)
+        return i
