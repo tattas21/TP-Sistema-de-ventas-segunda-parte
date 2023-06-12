@@ -1,19 +1,15 @@
-from Stock import *
-from ConsultaManager import *
 from Registro_usuario import *
 from Menu import *
 
 registro = RegistroUsuarios()
 usuario_actual = None  
-lista_entrelazada = Stock()
-consulta_manager = ConsultaManager()
+menu = Menu()
 while True:
-    opcion = menu(registro, usuario_actual)
-    match opcion:
+    match menu.menu(usuario_actual):
         case "1":
             registro.registro_user()
         case "2":
-            menu_usuario(registro, lista_entrelazada, consulta_manager)
+            menu.menu_usuario()
         case "3":
             print("Gracias por usar el sistema.")
             exit()

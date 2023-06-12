@@ -138,80 +138,80 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
                     contador += 1
                     total += int(campos[4])
                     lista.agregar(compra)   
-            archivo.close()
+        archivo.close()
             
-            l = True
-            while l == True:
-                print("Estadisticas Disponibles:")
-                print(f"1. Total Compras por Marca \n2. Cantidad de Compras Realizadas \n3. Total Gastado \n4. Detalle de Compras Realizadas \n5. Volver al menú principal")
-                opcion = input("Ingrese el número de la estadística que desea ver: ")
-                match opcion:    
-                    case "1":
-                        print("Total de compras por marca")
-                        lista_entrelazada1 = lista.list()
-                        for i in range(len(lista_entrelazada1)):
-                            marca = lista_entrelazada1[i]
-                            marca = marca.split(", ")[2]
-                            marca = marca.split("Marca: ")[1]
-                            contadormarca = 0
-                            for x in range(len(lista_entrelazada1)):
-                                marca2 = lista_entrelazada1 [x]
-                                marca2 = marca2.split(", ")[2]
-                                marca2 = marca2.split("Marca: ")[1]
-                                if marca2 == marca:
-                                    contadormarca += 1
-                                        
-                            if marca not in lista_marca: 
-                                lista_marca.append(marca.split())
-                                lista_contador.append(str(contadormarca).split())
-                            if marca in lista_marca:
-                                pass
+        l = True
+        while l == True:
+            print("Estadisticas Disponibles:")
+            print(f"1. Total Compras por Marca \n2. Cantidad de Compras Realizadas \n3. Total Gastado \n4. Detalle de Compras Realizadas \n5. Volver al menú principal")
+            opcion = input("Ingrese el número de la estadística que desea ver: ")
+            match opcion:    
+                case "1":
+                    print("Total de compras por marca")
+                    lista_entrelazada1 = lista.list()
+                    for i in range(len(lista_entrelazada1)):
+                        marca = lista_entrelazada1[i]
+                        marca = marca.split(", ")[2]
+                        marca = marca.split("Marca: ")[1]
+                        contadormarca = 0
+                        for x in range(len(lista_entrelazada1)):
+                            marca2 = lista_entrelazada1 [x]
+                            marca2 = marca2.split(", ")[2]
+                            marca2 = marca2.split("Marca: ")[1]
+                            if marca2 == marca:
+                                contadormarca += 1
                                     
-                        
-                        fig1, ax1 = plt.subplots()        
-                        labels = lista_marca
-                        size = lista_contador
+                        if marca not in lista_marca: 
+                            lista_marca.append(marca.split())
+                            lista_contador.append(str(contadormarca).split())
+                        if marca in lista_marca:
+                            pass
+                                
+                    
+                    fig1, ax1 = plt.subplots()        
+                    labels = lista_marca
+                    size = lista_contador
 
-                        ax1.pie(size, labels=labels, autopct='%1.1f%%',
-                        shadow=True, startangle=90)
-                        ax1.axis('equal')
+                    ax1.pie(size, labels=labels, autopct='%1.1f%%',
+                    shadow=True, startangle=90)
+                    ax1.axis('equal')
 
-                        plt.show()
-                        inp = input("Desea ver otra estadistica(s/n): ")
-                        if inp == "s":
-                            l = True
-                        else:
-                            l = False
-                    case "2":
-                        print(f"Usted ha realizado {contador} compra/s")
-                        inp = input("Desea ver otra estadistica(s/n): ")
-                        if inp == "s":
-                            l = True
-                        else:
-                            l = False
-                    case "3":
-                        print(f"El total gastado es de ${total}")
-                        inp = input("Desea ver otra estadistica(s/n): ")
-                        if inp == "s":
-                            l = True
-                        else:
-                            l = False
-                    case "4":
-                        print("------------------------------Detalle de compras realizadas------------------------------")
-                        print(lista)
-                        inp = input("Desea ver otra estadistica(s/n): ")
-                        if inp == "s":
-                            l = True
-                        else:
-                            l = False
-                    case "5":
-                        l = False
-                    case _:
-                        print("Opción no válida")
+                    plt.show()
+                    inp = input("Desea ver otra estadistica(s/n): ")
+                    if inp == "s":
                         l = True
+                    else:
+                        l = False
+                case "2":
+                    print(f"Usted ha realizado {contador} compra/s")
+                    inp = input("Desea ver otra estadistica(s/n): ")
+                    if inp == "s":
+                        l = True
+                    else:
+                        l = False
+                case "3":
+                    print(f"El total gastado es de ${total}")
+                    inp = input("Desea ver otra estadistica(s/n): ")
+                    if inp == "s":
+                        l = True
+                    else:
+                        l = False
+                case "4":
+                    print("------------------------------Detalle de compras realizadas------------------------------")
+                    print(lista)
+                    inp = input("Desea ver otra estadistica(s/n): ")
+                    if inp == "s":
+                        l = True
+                    else:
+                        l = False
+                case "5":
+                    l = False
+                case _:
+                    print("Opción no válida")
+                    l = True
     except FileNotFoundError:
         print("No ha realizado ninguna compra")
-    
+
 
 
 
@@ -241,8 +241,6 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                 lista.agregar(compra)
                 recaudacion += int(campos[4])
                 contador += 1
-                
-
         archivo.close() 
         l = True
         while l == True:

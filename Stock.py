@@ -231,47 +231,72 @@ class Stock(ListaEnlazada):
                     marca = input("Ingrese la marca del vehículo: ")
                     modelo = input("Ingrese el modelo del vehículo: ")
                     id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                    nuevo_auto = Utilitario(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(),int(input("Ingrese la carga máxima del vehículo: ")), id)
-                    n=False
-                    self.agregar(nuevo_auto)
-                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                    return n
+                    b = True
+                    while b:
+                        try:
+                            nuevo_auto = Utilitario(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(),int(input("Ingrese la carga máxima del vehículo: ")), id)
+                            n=False
+                            self.agregar(nuevo_auto)
+                            print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                            return n
+                        except ValueError:
+                            print("El valor ingresado no es válido, intente nuevamente")
                 case "deportivo":
                     marca = input("Ingrese la marca del vehículo: ")
                     modelo = input("Ingrese el modelo del vehículo: ")
                     id = marca[0:3].upper() + "-" +modelo[0:2].lower()+ "_" + i
-                    nuevo_auto = Deportivo(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(), int(input("Ingrese la velocidad máxima del vehículo: ")), id)
-                    n=False
-                    self.agregar(nuevo_auto)
-                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                    return n
+                    b = True
+                    while b:
+                        try:
+                            nuevo_auto = Deportivo(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: ").lower(), int(input("Ingrese la velocidad máxima del vehículo: ")), id)
+                            n=False
+                            self.agregar(nuevo_auto)
+                            print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                            return n
+                        except ValueError:
+                            print("El valor ingresado no es válido, intente nuevamente")
                 case "electrico":
                     marca = input("Ingrese la marca del vehículo: ")
                     modelo = input("Ingrese el modelo del vehículo: ")
                     id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                    nuevo_auto = Electrico(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tiempo de carga del vehículo: ")), id)
-                    n=False
-                    self.agregar(nuevo_auto)
-                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                    return n
+                    b = True
+                    while b:
+                        try:
+                            nuevo_auto = Electrico(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tiempo de carga del vehículo: ")), id)
+                            n=False
+                            self.agregar(nuevo_auto)
+                            print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                            return n
+                        except:
+                            print("Dato ingresado no valido, intente nuevamente")
                 case "van":
                     marca = input("Ingrese la marca del vehículo: ")
                     modelo = input("Ingrese el modelo del vehículo: ")
                     id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                    nuevo_auto = Van(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese la cantidad de asientos del vehículo: ")), id)
-                    n=False
-                    self.agregar(nuevo_auto)
-                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                    return n
+                    b = True
+                    while b:
+                        try:
+                            nuevo_auto = Van(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese la cantidad de asientos del vehículo: ")), id)
+                            n=False
+                            self.agregar(nuevo_auto)
+                            print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                            return n
+                        except:
+                            print("Dato ingresado no valido, intente nuevamente")
                 case "compacto":
                     marca = input("Ingrese la marca del vehículo: ")
                     modelo = input("Ingrese el modelo del vehículo: ")
                     id = marca[0:3].upper() + "-" +modelo[0:2].upper()+ "_" + i
-                    nuevo_auto = Compacto(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tamaño del baul del vehículo: ")), id)
-                    n=False
-                    self.agregar(nuevo_auto)
-                    print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
-                    return n
+                    b = True
+                    while b:
+                        try:
+                            nuevo_auto = Compacto(marca.lower(), modelo.lower(), int(input("Ingrese el precio del vehículo: ")), int(input("Ingrese la autonomía del vehículo: ")), input("Ingrese el uso del vehículo: "), int(input("Ingrese el tamaño del baul del vehículo: ")), id)
+                            n=False
+                            self.agregar(nuevo_auto)
+                            print(f"Se agregó el vehículo {str(nuevo_auto)} al stock")
+                            return n
+                        except:
+                            print("Dato ingresado no valido, intente nuevamente")
                 case _:
                     print("Tipo de vehículo no válido")
     def numero_id(self):
