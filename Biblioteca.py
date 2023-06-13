@@ -149,6 +149,8 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
                 case "1":
                     print("Total de compras por marca")
                     lista_entrelazada1 = lista.list()
+                    lista_marca = []
+                    lista_contador = []
                     for i in range(len(lista_entrelazada1)):
                         marca = lista_entrelazada1[i]
                         marca = marca.split(", ")[2]
@@ -160,14 +162,13 @@ def descargar_lista_ventas(nombre_archivo, usuario_actual, lista):
                             marca2 = marca2.split("Marca: ")[1]
                             if marca2 == marca:
                                 contadormarca += 1
-                                    
+
                         if marca not in lista_marca: 
-                            lista_marca.append(marca.split())
-                            lista_contador.append(str(contadormarca).split())
+                            lista_marca.append(marca)
+                            lista_contador.append(contadormarca)
                         if marca in lista_marca:
                             pass
-                                
-                    
+
                     fig1, ax1 = plt.subplots()        
                     labels = lista_marca
                     size = lista_contador
