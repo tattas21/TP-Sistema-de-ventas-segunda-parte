@@ -223,7 +223,8 @@ def convertir_tupla_en_lista(tupla):
     return lista
 
 
-def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
+def descargar_lista_ventas_estadisticas(nombre_archivo):
+    lista_entrelazada = ListaEnlazada()
     try:
         with open(nombre_archivo, "r") as archivo:
             lineas = archivo.readlines()
@@ -239,9 +240,11 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
             for linea in lineas:
                 campos = linea.strip().split(",")
                 compra = (f"DNI: {campos[0]}, Fecha: {campos[1]}, Marca: {campos[2]}, Modelo: {campos[3]}, Precio: ${campos[4]}")
-                lista.agregar(compra)
+                lista_entrelazada.agregar(compra)
                 recaudacion += int(campos[4])
                 contador += 1
+                
+
         archivo.close() 
         l = True
         while l == True:
@@ -251,13 +254,14 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
             print("3. Recaudacion total")
             print("4. Cantidad de autos vendidos")
             print("5. Detalle de todas las ventas")
-            print("6. Clientes distintos por mes")
-            print("7. Volver al menu principal")
+            print("6. Compradores por mes")
+            print("7. Ventas por marca")
+            print("8. salir")
             op = input("Ingrese la opcion que desea(numero): ")
             match op:
                 case "1":
 
-                    lista_entrelazada1 = lista.list()
+                    lista_entrelazada1 = lista_entrelazada.list()
                     for i in range(len(lista_entrelazada1)):
                         marca = lista_entrelazada1[i]
                         marca = marca.split(", ")[2]
@@ -293,7 +297,7 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     else:
                         l = False
                 case "2":
-                    lista_entrelazada2 = lista.list()
+                    lista_entrelazada2 = lista_entrelazada.list()
                     for i in range(len(lista_entrelazada2)):
                         fecha = lista_entrelazada2 [i]
                         fecha = fecha.split(", ")[1]
@@ -318,6 +322,8 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     fig, ax = plt.subplots()
                     x = lista_fecha
                     counts = lista_precio
+                    # for i in range(len(counts)):
+                    #     counts[i] = int(counts[i])
                     ax.bar(x, counts)
                     ax.set_ylabel('Recaudación')
                     ax.set_title('Recaudación Total por Día')          
@@ -342,8 +348,8 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     else:
                         l = False
                 case "5":
-                    print("------------------------------ Detalle de las ventas ------------------------------")
-                    lista_entrelazada4 = lista.list()
+                    print("Detalle de las ventas:")
+                    lista_entrelazada4 = lista_entrelazada.list()
                     for i in range(len(lista_entrelazada4)):
                         print(lista_entrelazada4[i])
                     inp = input("Desea ver otra estadistica(s/n): ")
@@ -358,15 +364,20 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                     lista_puntos6=[]
                     cont_dni=0
                     n=True
-                    while n:
-                        mes = str(input("ingrese mes fecha de la estadistica:"))
-                        while mes.isdigit() == False or int(mes)>12 :
-                            mes = input("ingrese un numero entre 1-12: ")
-                        n=False
-                    lista_entrelazada6 = lista.list()
+                    while n==True:
+                        try:
+                            mes=str(int(input("ingrese mes fecha de la estadistica:")))
+                            n=False
+                        except ValueError:
+                            print("ingrese un numero")
+                        if int(mes)>12:
+                            print("ingrese un numero entre 1-12")
+                            n=True
+                    lista_entrelazada6 = lista_entrelazada.list()
 
                     for i in range(0,len(lista_entrelazada6)):
                         lista_punto6=lista_entrelazada6[i].split(",")
+                        
                         lista_punto6[1]=lista_punto6[1].split("Fecha: ")[1]
                         lista_puntos6.append([lista_punto6[0],lista_punto6[1]])
                     for i in lista_puntos6:
@@ -383,10 +394,37 @@ def descargar_lista_ventas_estadisticas(nombre_archivo, lista):
                         print(f"la cantidad de compradores en este mes fue {cont_dni}, y fueron:")
                         for i in conjunto_dni:
                             print(i)
+
+                        
                     else:
                         print("No se han hecho compras en ese mes")
-                
+                    inp = input("Desea ver otra estadistica(s/n): ")
+                    if inp == "s":
+                        l = True
+                    else:
+                        l = False
                 case "7":
+                    
+                    marcas=[]
+                    datos=[]
+                    lista_entrelazada7 = lista_entrelazada.list()
+                    for i in range(0,len(lista_entrelazada7)):
+                        lista_punto7=lista_entrelazada7[i].split(",")      
+                        lista_punto7[2]=lista_punto7[2].split("Marca: ")[1]
+                        marcas.append(lista_punto7[2])
+                        
+                        datos.append(lista_punto7[3:5])
+                    diccionario = {clave: [] for clave in marcas}
+                    for i in range (0,len(marcas)):
+                        diccionario[marcas[i]].append(datos[i])
+                    marca=input("que marca desea buscar:")
+                    marca=marca.lower()
+                    for i in diccionario[marca]:
+                        for j in i:
+                            print(j, end="")
+                        print("\n")
+                        
+                case "8":
                     l = False
                 case _:
                     print("Dato no válido")

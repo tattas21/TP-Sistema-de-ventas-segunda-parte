@@ -70,7 +70,7 @@ class Menu:
                 return True
             case "5":
                 nombre_archivo = "ventas.txt"
-                descargar_lista_ventas_estadisticas(nombre_archivo, lista = ListaEnlazada())
+                descargar_lista_ventas_estadisticas(nombre_archivo)
                 return True
             case "6":
                 self.consulta_manager.responder_consulta()
