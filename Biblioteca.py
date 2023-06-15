@@ -329,12 +329,6 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                     ax1.axis('equal')
 
                     plt.show()
-
-                    inp = input("Desea ver otra estadistica(s/n): ")
-                    if inp == "s":
-                        l = True
-                    else:
-                        l = False
                 case "2":
                     lista_entrelazada2 = lista_entrelazada.list()
                     for i in range(len(lista_entrelazada2)):
@@ -433,10 +427,13 @@ def descargar_lista_ventas_estadisticas(nombre_archivo):
                         diccionario[marcas[i]].append(datos[i])
                     marca=input("que marca desea buscar:")
                     marca=marca.lower()
-                    for i in diccionario[marca]:
-                        for j in i:
-                            print(j, end="")
-                        print("\n")
+                    try:
+                        for i in diccionario[marca]:
+                            for j in i:
+                                print(j, end="")
+                            print("\n")
+                    except KeyError:
+                        print("no se encontro la marca")
                         
                 case "8":
                     l = False
