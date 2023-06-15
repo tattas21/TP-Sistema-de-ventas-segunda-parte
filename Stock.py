@@ -2,6 +2,10 @@ from Vehiculos import *
 from Biblioteca import *
 
 class Nodo:
+# La clase Nodo representa un nodo de una lista enlazada. Cada nodo contiene un objeto "dato"
+# (en este caso se llama vehiculo pero no solo son objetos vehiculos) y una referencia al siguiente nodo en la lista.
+
+
     def __init__(self, vehiculo, siguiente = None):
         self.vehiculo = vehiculo
         self.siguiente = siguiente
@@ -9,10 +13,13 @@ class Nodo:
         
 
 class ListaEnlazada:
+# La clase ListaEnlazada implementa una lista enlazada utilizando la clase Nodo. 
+# Tiene un atributo cabeza que apunta al primer nodo de la lista.
     def __init__(self):
         self.cabeza = None
     
     def agregar(self, vehiculo):
+# Agrega un nuevo nodo al final de la lista.
         nuevo_nodo = Nodo(vehiculo)
         if not self.cabeza:
             self.cabeza = nuevo_nodo
@@ -25,6 +32,7 @@ class ListaEnlazada:
             return
     
     def eliminar(self, id):
+# Elimina el nodo que contiene el objeto "dato" ingresado.
         
         if self.cabeza is None:
             return
@@ -53,6 +61,7 @@ class ListaEnlazada:
                 resultado += f"\n{str(actual.vehiculo)}"
             return resultado
     def list(self):
+# Devuelve una lista con los objetos "dato" de cada nodo.
         lista = []
         nodo = self.cabeza
         while nodo is not None:
@@ -60,17 +69,26 @@ class ListaEnlazada:
             nodo = nodo.siguiente
         return lista
     def ultimo_nodo(self):
+# Devuelve el último nodo de la lista.
         while self.cabeza.siguiente is not None:
             self.cabeza = self.cabeza.siguiente
         return self.cabeza
     def vaciar(self):
+# Vacía la lista.
         self.cabeza = None
+def lista_a_lista_enlazada(lista):
+    lista_enlazada = ListaEnlazada()
+    for elemento in lista:
+        lista_enlazada.agregar(elemento)
+    return lista_enlazada
 
 class Stock(ListaEnlazada):
+# La clase Stock hereda de ListaEnlazada y agrega métodos adicionales para gestionar el stock de vehículos. 
     def __init__(self):
         self = ListaEnlazada()
 
     def modificar(self, id, dato, nuevo_dato):
+# Modifica un dato específico del vehículo con el id especificado.
         if self.cabeza is None:
             return
         else:
@@ -114,6 +132,7 @@ class Stock(ListaEnlazada):
                 actual = actual.siguiente
             return print("No se encontró el vehículo")
     def buscar(self, marca, modelo, precio, autonomia, uso):
+# Busca y devuelve una lista de vehículos que coinciden con los criterios especificados.
         listav = []
         if self.cabeza is None:
             return
@@ -126,6 +145,7 @@ class Stock(ListaEnlazada):
             return listav
 
     def descargar_stock(self,nombre_archivo, variable):
+# Descarga el stock de vehículos desde un archivo y lo guarda en la lista enlazada.
         self.vaciar()
         try:
             with open(nombre_archivo, "r") as archivo:
@@ -153,6 +173,7 @@ class Stock(ListaEnlazada):
         return self
     
     def guardar_stock(self, nombre_archivo):
+# Guarda el stock de vehículos de la lista enlazada en un archivo.
         with open(nombre_archivo, "w") as archivo:
             if self.cabeza is not None:
                 actual = self.cabeza
@@ -181,6 +202,7 @@ class Stock(ListaEnlazada):
 
 
     def eliminar_vehiculo(self):
+# Permite al usuario eliminar un vehículo del stock a partir del ID.
         id = input("Ingrese el id del vehiculo a eliminar: ")
         actual = self.cabeza 
         while actual is not None:
@@ -191,6 +213,7 @@ class Stock(ListaEnlazada):
                 return
             actual = actual.siguiente
     def modificar_dato_vehiculo(self):
+# Permite al usuario modificar un dato específico de un vehículo en el stock.
         n = True
         while n == True:
             id = input("Ingrese el id del vehiculo a modificar: ")
@@ -206,6 +229,7 @@ class Stock(ListaEnlazada):
                 n = False
         self.guardar_stock("stock.txt")
     def agregar_vehiculo(self, registro):
+# Permite al usuario descargrar el stock, agregar vehículos y guardar el stock despues.
         self.descargar_stock("stock.txt", registro)
         i = self.numero_id()
         self.vaciar()
@@ -221,6 +245,7 @@ class Stock(ListaEnlazada):
         self.guardar_stock("stock.txt")
     
     def agregar_vehiculo_tipo(self,i):
+# Permite al usuario agregar un vehículo de un tipo específico al stock.
         n = True
         l = True
         while l:
@@ -300,6 +325,7 @@ class Stock(ListaEnlazada):
                 case _:
                     print("Tipo de vehículo no válido")
     def numero_id(self):
+# Devuelve el siguiente número de ID disponible para un nuevo vehículo en el stock.
         try:
             i = self.ultimo_nodo().vehiculo.id
             i = i.split("_")[1]

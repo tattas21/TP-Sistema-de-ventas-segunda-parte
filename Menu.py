@@ -4,12 +4,15 @@ from Registro_usuario import *
 from ConsultaManager import *
 
 class Menu:
+# La clase "Menu" tiene como objetivo principal gestionar y mostrar un menú de opciones para los usuarios de un sistema.
     def __init__(self):
         self.lista_entrelazada = Stock()
         self.registro = RegistroUsuarios()
         self.consulta_manager = ConsultaManager()
 
     def menu_usuario(self):
+# Es el método principal del menú. Permite a los usuarios iniciar sesión y 
+# acceder a las opciones correspondientes según su tipo (administrador o cliente).
         usuario_actual = self.registro.iniciar_sesion()     
         s = True
         while s == True:
@@ -20,7 +23,12 @@ class Menu:
                 else:
                     s = self.menu_cliente(usuario_actual, opcion[1])
 
+
     def menu(self, usuario_actual):
+# Muestra el menú de opciones correspondiente según el tipo de usuario. 
+# Si el usuario no ha iniciado sesión, muestra las opciones de registro e inicio de sesión. 
+# Si el usuario es administrador, muestra las opciones relacionadas con la gestión del sistema. 
+# Si el usuario es cliente, muestra las opciones relacionadas con la compra y gestión de vehículos.
         if usuario_actual is None:
             print("Bienvenido")
             print("1. Registro")
@@ -50,8 +58,10 @@ class Menu:
             op = input("Ingrese una opción (el numero): ")
             opcion = [False, op]
             return opcion
-        
+
     def menu_admin(self, opcion):
+# Procesa la opción seleccionada por un administrador y ejecuta la acción correspondiente. 
+# Las acciones incluyen agregar vehículo, eliminar vehículo, modificar vehículo, ver stock, ver ventas y responder soporte técnico.
         match opcion:
             case "1":
                 self.lista_entrelazada.agregar_vehiculo(self.registro.es_admin)
@@ -69,8 +79,7 @@ class Menu:
                 print(self.lista_entrelazada.descargar_stock("stock.txt", self.registro.es_admin))
                 return True
             case "5":
-                nombre_archivo = "ventas.txt"
-                descargar_lista_ventas_estadisticas(nombre_archivo)
+                descargar_lista_ventas_estadisticas("ventas.txt")
                 return True
             case "6":
                 self.consulta_manager.responder_consulta()
@@ -83,6 +92,8 @@ class Menu:
                 return True
 
     def menu_cliente(self, usuario_actual, opcion):
+# Procesa la opción seleccionada por un cliente y ejecuta la acción correspondiente. 
+# Las acciones incluyen ver stock, comprar vehículo, ver mis compras, modificar mis datos, soporte técnico.
         match opcion:
             case "1":
                 self.lista_entrelazada.descargar_stock("stock.txt", self.registro.es_admin)
