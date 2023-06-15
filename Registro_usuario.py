@@ -154,8 +154,9 @@ class RegistroUsuarios(Usuario):
                 lista.append(campos)
         archivo.close()
         print("1. Modificar nombre")
-        print("2. Modificar contraseña")
-        print("3. Salir")
+        print("2. Modificar email")
+        print("3. Modificar contraseña")
+        print("4. Salir")
         n=False
         while n==False:
             dato=input("Ingrese el dato que desea modificar(NUMERO): ")
@@ -179,6 +180,8 @@ class RegistroUsuarios(Usuario):
                     while validar_password(usuario.contraseña) == False:
                         print("Contraseña no válida.")
                         usuario.contraseña = input("Ingrese su contraseña: ")
+                case "4":
+                    n=True
                 case _:
                     print("Dato no válido")
                     dato = input("Ingrese el dato que desea modificar: ")

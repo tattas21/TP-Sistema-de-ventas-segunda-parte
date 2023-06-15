@@ -221,9 +221,9 @@ class Stock(ListaEnlazada):
             dato = dato.lower()
             nuevo_dato = input("Ingrese el nuevo dato: ")
             self.modificar(id, dato, nuevo_dato)
-            input = input("Desea modificar otro dato? (s/n): ")
-            input = input.lower()
-            if input == "s":
+            salir = input("Desea modificar otro dato? (s/n): ")
+            salir = input.lower()
+            if salir == "s":
                 n = True
             else:
                 n = False
