@@ -11,9 +11,9 @@ deportivo,subaru,wrx,43500,625,urbano,255,SUB-wr_17
 compacto,fiat,cronos,14500,580,urbano,3,FIA-CR_18
 electrico,tesla,y,48500,320,urbano,12,TES-Y_20
 deportivo,ferrari,f40,550000,530,urbano,270,FER-f4_21
-van,bmw,x6,80000,600,urbano, 8,None
+van,bmw,x6,80000,600,urbano, 8,BMW-X6_22
 deportivo,porsche,911,300000,620,urbano,300,POR-91_23
 van,toyota,sw4,50000,650,urbano, 8,TOY-SW_24
 utilitario,ford,raptor,70000,600,mixto,800,FOR-RA_25
-van,bmw,x6,60000,600,urbano, 5,None
+van,bmw,x6,60000,600,urbano, 5,BMW-X6_26
 deportivo,audi,r8,210000,500,urbano,300,AUD-r8_27

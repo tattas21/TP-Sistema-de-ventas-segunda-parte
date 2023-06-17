@@ -95,6 +95,7 @@ class RegistroUsuarios(Usuario):
 # Este método guía al usuario a través del proceso de inicio de sesión. Solicita al usuario que ingrese su email y contraseña, 
 # y verifica si coinciden con un usuario registrado. Si la combinación de email y contraseña es correcta, 
 # inicia sesión y guarda el usuario actual. Si no es correcta, muestra un mensaje de error y da la opción de salir del programa.
+        self.cargar_usuarios()
         l = False
         email = input("Ingrese su email: ")
         email=email.lower()
