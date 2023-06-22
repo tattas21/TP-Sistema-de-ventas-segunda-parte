@@ -83,9 +83,13 @@ class ConsultaManager:
             if consulta.user == user and consulta.respondida == "False":
                 preguntas_sin_respuesta.append(consulta)
         print("Preguntas respondidas: ")
+        if preguntas_con_respuesta == []:
+            print("No hay preguntas respondidas.")
         for pregunta in preguntas_con_respuesta:
             print(f"{pregunta.pregunta}: {pregunta.respuesta}")
         print("Preguntas sin responder: ")
+        if preguntas_sin_respuesta == []:
+            print("No hay preguntas hechas.")
         for pregunta in preguntas_sin_respuesta:
             print(f"{pregunta.pregunta}")
     def menu_consulta(self,usuario_actual):

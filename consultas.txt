@@ -1,2 +1,5 @@
 tomas lopez 12121212 tlopez@itba.edu.ar,sol,True,no
-tomas lopez 12121212 tlopez@itba.edu.ar,coco,True,hola, en que puedo ayudar
+tomas lopez 12121212 tlopez@itba.edu.ar,coco,True,hola
+Sol Lopez 44556655 sol@sol.com,Como cambio mi contra?,True,En la seccion de modificacion de datos
+Martin Palermo 54545454 mpalermo@gmail.com,Como veo el stock?,False,None
+Sol Lopez 44556655 sol@sol.com,como hago para comprar?,False,None
