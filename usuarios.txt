@@ -2,7 +2,9 @@ Tomas Attas,44668578,tattas@sistema.com.ar,1234tomas
 tomas attas,44668577,cliente@cliente.com,1234tomas
 Lucas Rodriguez,44668576,c@c.com,tomas1234
 lionel messi,44668575,lmessi@gmail.com,1234tomas
-Sol Lopez,44556655,sol@sol.com,1234tomas
+Sol Lopez,44556655,sol@sol.com,tomas1234
 tomas lopez,12121212,tlopez@itba.edu.ar,1234lopez
 Angel Dimaria,87654321,fideo@gmail.com,1234fideo
 Kun Aguero,12344321,kuni@gmail.com,kuni1234
+agustina martin,19283746,agusm@gmail.com,1234tomas
+Martin Palermo,54545454,mpalermo@gmail.com,palermo1234

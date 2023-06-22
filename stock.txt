@@ -2,8 +2,6 @@ utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_7
 utilitario,mercedes,sprinter,20000,475,trabajo,3000,MER-SP_8
 deportivo,ford,mustang,40000,580,urbano,250,FOR-mu_9
 deportivo,porsche,911,370000,700,urbano,330,POR-91_10
-deportivo,audi,r8,300000,650,urbano,255,AUD-r8_11
-compacto,toyota,etios,12000,515,urbano,1,TOY-ET_13
 compacto,volkswagen,polo,13500,550,urbano,2,VOL-PO_14
 compacto,ford,focus,28000,600,urbano,3,FOR-FO_15
 van,volkswagen,taos,31000,730,urbano, 8,VOL-TA_16
@@ -15,5 +13,4 @@ van,bmw,x6,80000,600,urbano, 8,BMW-X6_22
 deportivo,porsche,911,300000,620,urbano,300,POR-91_23
 van,toyota,sw4,50000,650,urbano, 8,TOY-SW_24
 utilitario,ford,raptor,70000,600,mixto,800,FOR-RA_25
-van,bmw,x6,60000,600,urbano, 5,BMW-X6_26
-deportivo,audi,r8,210000,500,urbano,300,AUD-r8_27
+deportivo,ferrari,sypder,500000,550,urbano,320,FER-sy_27

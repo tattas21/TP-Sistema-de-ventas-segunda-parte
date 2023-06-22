@@ -3,12 +3,14 @@ from Biblioteca import *
 from Registro_usuario import *
 from ConsultaManager import *
 
+
 class Menu:
 # La clase "Menu" tiene como objetivo principal gestionar y mostrar un menú de opciones para los usuarios de un sistema.
     def __init__(self):
         self.lista_entrelazada = Stock()
         self.registro = RegistroUsuarios()
         self.consulta_manager = ConsultaManager()
+
 
     def menu_usuario(self):
 # Es el método principal del menú. Permite a los usuarios iniciar sesión y 
@@ -19,7 +21,7 @@ class Menu:
             if usuario_actual is not None:
                 opcion = self.menu(usuario_actual)
                 if opcion[0] == True:
-                    s = self.menu_admin(opcion[1])
+                    s = self.menu_admin(opcion[1], usuario_actual)
                 else:
                     s = self.menu_cliente(usuario_actual, opcion[1])
 
@@ -44,7 +46,8 @@ class Menu:
             print('4. Ver stcok')
             print('5. Ver ventas')
             print('6. Responder soporte tecnico')
-            print('7. cerrar sesion')
+            print('7. Modificar datos')
+            print('8. cerrar sesion')
             op = input("Ingrese una opción (el numero): ")
             opcion = [True, op]
             return opcion
@@ -59,7 +62,7 @@ class Menu:
             opcion = [False, op]
             return opcion
 
-    def menu_admin(self, opcion):
+    def menu_admin(self, opcion, usuario_actual):
 # Procesa la opción seleccionada por un administrador y ejecuta la acción correspondiente. 
 # Las acciones incluyen agregar vehículo, eliminar vehículo, modificar vehículo, ver stock, ver ventas y responder soporte técnico.
         match opcion:
@@ -79,12 +82,16 @@ class Menu:
                 print(self.lista_entrelazada.descargar_stock("stock.txt", self.registro.es_admin))
                 return True
             case "5":
-                descargar_lista_ventas_estadisticas("ventas.txt")
+                usuario_actual.descargar_lista_ventas_estadisticas("ventas.txt")
                 return True
             case "6":
                 self.consulta_manager.responder_consulta()
                 return True
             case "7":
+                self.registro.modificar_dato(usuario_actual)
+                return True
+            case "8":
+                self.registro.vaciar_usuarios()
                 print("Gracias por usar el sistema.")
                 return False
             case _:
@@ -105,47 +112,10 @@ class Menu:
                     actual = actual.siguiente
                 return True
             case "2":
-                self.lista_entrelazada.descargar_stock("stock.txt", self.registro.es_admin)
-                t = True
-                lista_filtro = []
-                while t == True:
-                    marca = None
-                    modelo = None
-                    precio = None
-                    autonomia = None
-                    uso = None
-                    buscar = input("Ingrese el dato a buscar: ")
-                    match buscar:
-                        case "marca":
-                            marca = input("Ingrese la marca del vehiculo: ")
-                            marca = marca.lower()
-                        case "modelo":
-                            modelo = input("Ingrese el modelo del vehiculo: ")
-                            modelo = modelo.lower()
-                        case "precio":
-                            precio = input("Ingrese el precio del vehiculo: ")
-                        case "autonomia":
-                            autonomia = input("Ingrese la autonomia del vehiculo: ")
-                        case "uso":
-                            uso = input("Ingrese el uso del vehiculo: ")
-                            uso = uso.lower()
-                    lista_filtro_1 = self.lista_entrelazada.buscar(marca, modelo, precio, autonomia, uso)
-                    for i in range(len(lista_filtro_1)):
-                        lista_filtro.append(lista_filtro_1[i])
-                    print("Desea agregar otro filtro? (s/n)")
-                    if input() == "s":
-                        t = True
-                    else:
-                        t = False
-                print("Vehículos encontrados:")
-                for vehiculo in lista_filtro:
-                    v = vehiculo
-                    v.id = None
-                    print(v)
-                comprar_vehiculo(lista_filtro, self.lista_entrelazada, usuario_actual)
+                comprar_vehiculo(self.lista_entrelazada, usuario_actual, self.registro)
                 return True
             case "3":
-                descargar_lista_ventas("ventas.txt", usuario_actual, lista = ListaEnlazada())
+                usuario_actual.descargar_lista_ventas("ventas.txt")
                 return True
             case "4":
                 self.registro.modificar_dato(usuario_actual)
@@ -154,6 +124,7 @@ class Menu:
                 self.consulta_manager.menu_consulta(usuario_actual)
                 return True
             case "6":
+                self.registro.vaciar_usuarios()
                 print("Gracias por usar el sistema.")
                 return False
             case _:

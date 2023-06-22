@@ -222,7 +222,7 @@ class Stock(ListaEnlazada):
             nuevo_dato = input("Ingrese el nuevo dato: ")
             self.modificar(id, dato, nuevo_dato)
             salir = input("Desea modificar otro dato? (s/n): ")
-            salir = input.lower()
+            salir = salir.lower()
             if salir == "s":
                 n = True
             else:
@@ -328,7 +328,8 @@ class Stock(ListaEnlazada):
 # Devuelve el siguiente número de ID disponible para un nuevo vehículo en el stock.
         try:
             i = self.ultimo_nodo().vehiculo.id
-            i = i.split("_")[1]
+            i = i.split("_")
+            i = i[1]
             i=int(i) + 1
             i = str(i)
         except AttributeError:

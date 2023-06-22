@@ -1,2 +1,2 @@
 tomas lopez 12121212 tlopez@itba.edu.ar,sol,True,no
-tomas lopez 12121212 tlopez@itba.edu.ar,coco,False,None
+tomas lopez 12121212 tlopez@itba.edu.ar,coco,True,hola, en que puedo ayudar

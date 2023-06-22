@@ -8,7 +8,6 @@ class RegistroUsuarios(Usuario):
     def __init__(self):
         self.usuarios = []
         self.archivo = "usuarios.txt"
-        self.cargar_usuarios()
         self.usuario_actual = None
         self.email = None
         self.password = None
@@ -28,9 +27,11 @@ class RegistroUsuarios(Usuario):
     def guardar_usuarios(self):
 # Este método guarda la lista de usuarios en el archivo especificado. 
 # Abre el archivo en modo escritura y recorre la lista de usuarios, escribiendo cada uno en una nueva línea en el archivo.
+        
         with open(self.archivo, "w") as f:
-            for usuario in self.usuarios:
-                f.write(f"{usuario.nombre},{usuario.dni},{usuario.email},{usuario.password}\n")
+            for usuarios in self.usuarios:
+                f.write(f"{usuarios.nombre},{usuarios.dni},{usuarios.email},{usuarios.password}\n")
+
         f.close()
 
     def cargar_usuarios(self):
@@ -145,46 +146,74 @@ class RegistroUsuarios(Usuario):
     
     def modificar_dato (self,usuario):
 # Este método permite al usuario modificar sus datos registrados. Permite al usuario seleccionar qué dato desea modificar 
-# (nombre, email o contraseña) y solicita el nuevo valor para ese dato. Luego, actualiza el valor correspondiente en el objeto usuario 
+# (nombre, email o contraseña) o en caso de ser admin (contraseña) y solicita el nuevo valor para ese dato. Luego, actualiza el valor correspondiente en el objeto usuario 
 # y guarda los cambios en el archivo utilizando el método guardar_usuarios.
-        lista = []
-        with open("usuarios.txt", "r") as archivo:
-            lineas = archivo.readlines()
-            for linea in lineas:
-                campos = linea.strip().split(",")
-                lista.append(campos)
-        archivo.close()
-        print("1. Modificar nombre")
-        print("2. Modificar email")
-        print("3. Modificar contraseña")
-        print("4. Salir")
-        n=False
-        while n==False:
-            dato=input("Ingrese el dato que desea modificar(NUMERO): ")
-            dato=dato.lower()
-            match dato:
-                case "1":
-                    usuario.nombre=input("Ingrese el nuevo nombre: ")
-                    n=True
-                    while validar_nombre(usuario.nombre) == False:
-                        print("Nombre no válido.")
-                        usuario.nombre = input("Ingrese su nombre: ")
-                case "2":
-                    usuario.email=input("Ingrese el nuevo email: ")
-                    n=True
-                    while validar_email(usuario.email) == False:
-                        print("Email no válido.")
-                        usuario.email = input("Ingrese su email: ")
-                case "3":
-                    usuario.contraseña=input("Ingrese la nueva contraseña: ")
-                    n=True
-                    while validar_password(usuario.contraseña) == False:
-                        print("Contraseña no válida.")
-                        usuario.contraseña = input("Ingrese su contraseña: ")
-                case "4":
-                    n=True
-                case _:
-                    print("Dato no válido")
-                    dato = input("Ingrese el dato que desea modificar: ")
-                    n == False
+        if self.es_admin == True:
+            print("1. Modificar contraseña")
+            print("2. Salir")
+            n=False
+            while n==False:
+                dato=input("Ingrese el dato que desea modificar(NUMERO): ")
+                dato=dato.lower()
+                match dato:
+                    case "1":
+                        usuario.password = input("Ingrese la nueva contraseña: ")
+                        n=True
+                        while validar_password(usuario.password) == False:
+                            print("Contraseña no válida.")
+                            usuario.password = input("Ingrese su contraseña: ")
+                        for usuarios in self.usuarios:
+                            if usuarios.dni == usuario.dni:
+                                usuarios.password = usuario.password
+                    case "2":
+                        n=True
+                        pass
+                    case _:
+                        print("Dato no válido")
+                        n == False
+        else:
+            print("1. Modificar nombre")
+            print("2. Modificar email")
+            print("3. Modificar contraseña")
+            print("4. Salir")
+            n=False
+            while n==False:
+                dato=input("Ingrese el dato que desea modificar(NUMERO): ")
+                dato=dato.lower()
+                match dato:
+                    case "1":
+                        usuario.nombre=input("Ingrese el nuevo nombre: ")
+                        n=True
+                        while validar_nombre(usuario.nombre) == False:
+                            print("Nombre no válido.")
+                            usuario.nombre = input("Ingrese su nombre: ")
+                        for usuarios in self.usuarios:
+                            if usuarios.dni == usuario.dni:
+                                usuarios.nombre = usuario.nombre
+                    case "2":
+                        usuario.email=input("Ingrese el nuevo email: ")
+                        n=True
+                        while validar_email(usuario.email) == False:
+                            print("Email no válido.")
+                            usuario.email = input("Ingrese su email: ")
+                        for usuarios in self.usuarios:
+                            if usuarios.dni == usuario.dni:
+                                usuarios.email = usuario.email
+                    case "3":
+                        usuario.contraseña = input("Ingrese la nueva contraseña: ")
+                        n=True
+                        while validar_password(usuario.contraseña) == False:
+                            print("Contraseña no válida.")
+                            usuario.contraseña = input("Ingrese su contraseña: ")
+                        for usuarios in self.usuarios:
+                            if usuarios.dni == usuario.dni:
+                                usuarios.password = usuario.contraseña
+                    case "4":
+                        n=True
+                    case _:
+                        print("Dato no válido")
+                        n == False
         self.guardar_usuarios()
+    
+    def vaciar_usuarios(self):
+            self.usuarios = []
